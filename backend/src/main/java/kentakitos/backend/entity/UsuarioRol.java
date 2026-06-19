@@ -16,8 +16,8 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "UsuarioRol")
-@SQLDelete(sql = "UPDATE UsuarioRol SET deleted = 0 WHERE idusuario_rol = ?")
+@Table(name = "usuario_rol")
+@SQLDelete(sql = "UPDATE usuario_rol SET deleted = 0 WHERE idusuario_rol = ?")
 @Where(clause = "deleted = 1")
 @Data
 
@@ -25,12 +25,15 @@ public class UsuarioRol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idusuario_rol;
-    private Integer idusuario;
-    private Integer idrol;
     private Integer deleted = 1;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idusuario", insertable = false, updatable = false)
+    @JoinColumn(name = "idusuario")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Usuarios usuario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idrol")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Roles rol;
 }

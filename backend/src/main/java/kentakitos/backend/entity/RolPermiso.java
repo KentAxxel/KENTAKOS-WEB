@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "RolPermiso")
+@Table(name = "rol_permiso")
 @Data
 
 public class RolPermiso {

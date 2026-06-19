@@ -11,8 +11,8 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "Usuarios")
-@SQLDelete(sql = "UPDATE Usuarios SET deleted = 0 WHERE idusuario = ?")
+@Table(name = "usuarios")
+@SQLDelete(sql = "UPDATE usuarios SET deleted = 0 WHERE idusuario = ?")
 @Where(clause = "deleted = 1")
 @Data
 

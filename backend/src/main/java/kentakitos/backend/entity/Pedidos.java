@@ -1,5 +1,7 @@
 package kentakitos.backend.entity;
 
+import java.time.LocalDate;
+
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -27,7 +29,7 @@ public class Pedidos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idpedido;
-    private String fecha;
+    private LocalDate fecha;
     private String observaciones;
     private Integer deleted;
 

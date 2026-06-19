@@ -13,8 +13,8 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "Mesas")
-@SQLDelete(sql = "UPDATE Mesas SET deleted = 0 WHERE idmesa = ?")
+@Table(name = "mesas")
+@SQLDelete(sql = "UPDATE mesas SET deleted = 0 WHERE idmesa = ?")
 @Where(clause = "deleted = 1")
 @Data
 

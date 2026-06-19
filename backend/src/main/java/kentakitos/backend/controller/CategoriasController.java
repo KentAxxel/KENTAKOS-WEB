@@ -20,7 +20,7 @@ import kentakitos.backend.service.ICategoriasService;
 @RequestMapping("/kentakitos")
 
 public class CategoriasController {
-        @Autowired
+    @Autowired
     private ICategoriasService categoriasService;
 
     @GetMapping("/categorias")
