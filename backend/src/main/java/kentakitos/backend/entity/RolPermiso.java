@@ -17,6 +17,7 @@ import lombok.Data;
 public class RolPermiso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idrolpermiso;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idrol")
