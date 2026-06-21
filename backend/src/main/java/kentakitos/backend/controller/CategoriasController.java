@@ -27,20 +27,24 @@ public class CategoriasController {
     public List<Categorias> buscarTodos() {
         return categoriasService.buscarTodos();
     }
+
     @PostMapping("/categorias")
     public Categorias guardar(@RequestBody Categorias categoria) {
         categoriasService.guardar(categoria);
         return categoria;
     }
+
     @PutMapping("/categorias")
     public Categorias modificar(@RequestBody Categorias categoria) {
         categoriasService.modificar(categoria);
         return categoria;
     }
+
     @GetMapping("/categorias/{id}")
     public Optional<Categorias> buscarPorId(@PathVariable("id") Integer id) {
-        return categoriasService.buscarPorId(id);
+        return categoriasService.buscarId(id);
     }
+
     @DeleteMapping("/categorias/{id}")
     public String eliminar(@PathVariable Integer id) {
         categoriasService.eliminar(id);
