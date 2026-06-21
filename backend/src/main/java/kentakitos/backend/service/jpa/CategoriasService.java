@@ -24,7 +24,7 @@ public class CategoriasService implements ICategoriasService {
     public Categorias modificar(Categorias categoria){
         return repoCategoria.save(categoria);
     }
-    public Optional<Categorias> buscarId(Integer id){
+    public Optional<Categorias> buscarPorId(Integer id){
         return repoCategoria.findById(id);
     }
     public void eliminar(Integer id){

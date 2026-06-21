@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kentakitos | Comida Rápida Regional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+        :root {
+            --naranja: #FF5A1F;
+            --naranja-oscuro: #E04D12;
+            --naranja-claro: #FF7F4D;
+            --naranja-palido: #FFF3ED;
+            --negro: #111111;
+            --negro-suave: #1E1E1E;
+            --blanco: #FFFFFF;
+            --gris-claro: #F5F5F5;
+            --gris-medio: #E0E0E0;
+            --gris-oscuro: #666666;
+            --sombra-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --sombra-md: 0 6px 24px rgba(0, 0, 0, 0.10);
+            --sombra-lg: 0 12px 40px rgba(0, 0, 0, 0.14);
+            --sombra-xl: 0 20px 60px rgba(0, 0, 0, 0.18);
+            --borde-redondo-sm: 10px;
+            --borde-redondo-md: 16px;
+            --borde-redondo-lg: 24px;
+            --borde-redondo-xl: 32px;
+            --transicion: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transicion-lenta: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--blanco);
+            color: var(--negro);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ========== HEADER / NAV ========== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid transparent;
+            transition: all var(--transicion);
+            padding: 0;
+        }
+
+        .header.scrolled {
+            border-bottom-color: var(--gris-medio);
+            box-shadow: var(--sombra-sm);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+            transition: height var(--transicion);
+        }
+
+        .header.scrolled .nav-container {
+            height: 68px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            z-index: 1001;
+            flex-shrink: 0;
+        }
+
+        .logo-icono {
+            width: 44px;
+            height: 44px;
+            background: var(--naranja);
+            border-radius: var(--borde-redondo-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: var(--blanco);
+            font-weight: 900;
+            letter-spacing: -1px;
+            transition: transform var(--transicion);
+            box-shadow: 0 4px 12px rgba(255, 90, 31, 0.3);
+        }
+
+        .logo:hover .logo-icono {
+            transform: scale(1.08) rotate(-5deg);
+        }
+
+        .logo-texto {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1.45rem;
+            color: var(--negro);
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+        }
+
+        .logo-texto span {
+            color: var(--naranja);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--negro);
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            padding: 6px 0;
+            transition: color var(--transicion);
+            letter-spacing: 0.1px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2.5px;
+            background: var(--naranja);
+            border-radius: 2px;
+            transition: width var(--transicion);
+        }
+
+        .nav-links a:hover,
+        .nav-links a.activo {
+            color: var(--naranja);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.activo::after {
+            width: 100%;
+        }
+
+        .btn-nav {
+            background: var(--naranja);
+            color: var(--blanco) !important;
+            padding: 12px 26px !important;
+            border-radius: 50px;
+            font-weight: 600 !important;
+            transition: all var(--transicion) !important;
+            font-size: 0.9rem !important;
+            letter-spacing: 0.2px;
+            box-shadow: 0 4px 16px rgba(255, 90, 31, 0.25);
+            white-space: nowrap;
+        }
+
+        .btn-nav:hover {
+            background: var(--naranja-oscuro) !important;
+            box-shadow: 0 6px 24px rgba(255, 90, 31, 0.4) !important;
+            transform: translateY(-2px);
+            color: var(--blanco) !important;
+        }
+
+        .btn-nav::after {
+            display: none !important;
+        }
+
+        /* Hamburguesa */
+        .hamburguesa {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 8px;
+            background: none;
+            border: none;
+            width: 40px;
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hamburguesa span {
+            display: block;
+            width: 26px;
+            height: 2.5px;
+            background: var(--negro);
+            border-radius: 3px;
+            transition: all var(--transicion);
+            transform-origin: center;
+        }
+
+        .hamburguesa.activo span:nth-child(1) {
+            transform: translateY(8.5px) rotate(45deg);
+        }
+        .hamburguesa.activo span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamburguesa.activo span:nth-child(3) {
+            transform: translateY(-8.5px) rotate(-45deg);
+        }
+
+        /* ========== HERO ========== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 32px 80px;
+            background: var(--blanco);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-fondo {
+            position: absolute;
+            top: -120px;
+            right: -80px;
+            width: 620px;
+            height: 620px;
+            background: var(--naranja-palido);
+            border-radius: 50%;
+            z-index: 0;
+            opacity: 0.7;
+        }
+
+        .hero-fondo-dos {
+            position: absolute;
+            bottom: -100px;
+            left: -60px;
+            width: 350px;
+            height: 350px;
+            background: var(--naranja);
+            border-radius: 50%;
+            z-index: 0;
+            opacity: 0.06;
+        }
+
+        .hero-contenido {
+            max-width: 1280px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-texto {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .hero-etiqueta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--negro);
+            color: var(--blanco);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            width: fit-content;
+            animation: pulseSubtle 2.5s ease-in-out infinite;
+        }
+
+        .hero-etiqueta .punto {
+            width: 8px;
+            height: 8px;
+            background: var(--naranja);
+            border-radius: 50%;
+            animation: brillo 1.5s ease-in-out infinite;
+        }
+
+        @keyframes brillo {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 90, 31, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(255, 90, 31, 0);
+            }
+        }
+
+        @keyframes pulseSubtle {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.03);
+            }
+        }
+
+        .hero-titulo {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-size: clamp(2.8rem, 5.5vw, 4.4rem);
+            line-height: 1.08;
+            color: var(--negro);
+            letter-spacing: -1.5px;
+        }
+
+        .hero-titulo .destacado {
+            color: var(--naranja);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-titulo .destacado::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 90, 31, 0.2);
+            border-radius: 4px;
+            z-index: -1;
+        }
+
+        .hero-descripcion {
+            font-size: 1.15rem;
+            color: var(--gris-oscuro);
+            max-width: 480px;
+            line-height: 1.7;
+        }
+
+        .hero-botones {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .btn-primario {
+            background: var(--naranja);
+            color: var(--blanco);
+            padding: 16px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.3px;
+            transition: all var(--transicion);
+            box-shadow: 0 8px 28px rgba(255, 90, 31, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primario:hover {
+            background: var(--naranja-oscuro);
+            box-shadow: 0 12px 36px rgba(255, 90, 31, 0.45);
+            transform: translateY(-3px);
+        }
+
+        .btn-secundario {
+            background: transparent;
+            color: var(--negro);
+            padding: 16px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.3px;
+            transition: all var(--transicion);
+            border: 2px solid var(--negro);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-secundario:hover {
+            background: var(--negro);
+            color: var(--blanco);
+            transform: translateY(-3px);
+        }
+
+        .hero-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-imagen-principal {
+            width: 100%;
+            max-width: 480px;
+            aspect-ratio: 1;
+            background: var(--negro);
+            border-radius: var(--borde-redondo-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(8rem, 16vw, 14rem);
+            position: relative;
+            box-shadow: var(--sombra-xl);
+            transition: transform var(--transicion-lenta);
+            animation: flotar 6s ease-in-out infinite;
+        }
+
+        @keyframes flotar {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            25% {
+                transform: translateY(-14px);
+            }
+            50% {
+                transform: translateY(-6px);
+            }
+            75% {
+                transform: translateY(-18px);
+            }
+        }
+
+        .hero-badge {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            background: var(--naranja);
+            color: var(--blanco);
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: var(--sombra-lg);
+            animation: flotarBadge 4s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        @keyframes flotarBadge {
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-10px) rotate(5deg);
+            }
+        }
+
+        .hero-badge .badge-precio {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+        .hero-badge .badge-texto {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
+        /* ========== SECCIONES GENERALES ========== */
+        .seccion {
+            padding: 100px 32px;
+        }
+
+        .seccion-oscura {
+            background: var(--negro);
+            color: var(--blanco);
+        }
+
+        .seccion-gris {
+            background: var(--gris-claro);
+        }
+
+        .contenedor {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .seccion-encabezado {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .seccion-etiqueta {
+            display: inline-block;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: var(--naranja);
+            margin-bottom: 12px;
+        }
+
+        .seccion-oscura .seccion-etiqueta {
+            color: var(--naranja-claro);
+        }
+
+        .seccion-titulo {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            letter-spacing: -0.8px;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        .seccion-oscura .seccion-titulo {
+            color: var(--blanco);
+        }
+
+        .seccion-subtitulo {
+            color: var(--gris-oscuro);
+            font-size: 1.05rem;
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        .seccion-oscura .seccion-subtitulo {
+            color: #aaa;
+        }
+
+        /* ========== MENÚ ========== */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 28px;
+        }
+
+        .menu-card {
+            background: var(--blanco);
+            border-radius: var(--borde-redondo-lg);
+            overflow: hidden;
+            box-shadow: var(--sombra-sm);
+            transition: all var(--transicion);
+            cursor: pointer;
+            position: relative;
+            border: 1px solid transparent;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--sombra-lg);
+            border-color: var(--gris-medio);
+        }
+
+        .menu-card-imagen {
+            width: 100%;
+            height: 200px;
+            background: var(--naranja-palido);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            position: relative;
+            overflow: hidden;
+            transition: background var(--transicion);
+        }
+
+        .menu-card:nth-child(2) .menu-card-imagen {
+            background: #FFF0E8;
+        }
+        .menu-card:nth-child(3) .menu-card-imagen {
+            background: #FFF7F0;
+        }
+        .menu-card:nth-child(4) .menu-card-imagen {
+            background: #FFEDE4;
+        }
+        .menu-card:nth-child(5) .menu-card-imagen {
+            background: #FFF3EB;
+        }
+        .menu-card:nth-child(6) .menu-card-imagen {
+            background: #FFEFE5;
+        }
+        .menu-card:nth-child(7) .menu-card-imagen {
+            background: #FFF5EE;
+        }
+        .menu-card:nth-child(8) .menu-card-imagen {
+            background: #FFF0E6;
+        }
+
+        .menu-card:hover .menu-card-imagen {
+            background: var(--naranja-palido);
+        }
+
+        .menu-card-etiqueta {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: var(--negro);
+            color: var(--blanco);
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            z-index: 1;
+        }
+
+        .menu-card-etiqueta.destacada {
+            background: var(--naranja);
+        }
+
+        .menu-card-info {
+            padding: 20px 22px 24px;
+        }
+
+        .menu-card-nombre {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+            color: var(--negro);
+        }
+
+        .menu-card-descripcion {
+            font-size: 0.88rem;
+            color: var(--gris-oscuro);
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        .menu-card-precio {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--naranja);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .menu-card-precio .moneda {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .menu-card-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--negro);
+            color: var(--blanco);
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all var(--transicion);
+            margin-top: 14px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .menu-card-btn:hover {
+            background: var(--naranja);
+            color: var(--blanco);
+            box-shadow: 0 4px 16px rgba(255, 90, 31, 0.3);
+        }
+
+        /* ========== PROMOCIONES ========== */
+        .promos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 28px;
+        }
+
+        .promo-card {
+            background: var(--blanco);
+            border-radius: var(--borde-redondo-lg);
+            padding: 36px 30px;
+            box-shadow: var(--sombra-md);
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transicion);
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .promo-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--sombra-lg);
+            border-color: var(--naranja);
+        }
+
+        .promo-card.destacada {
+            background: var(--negro);
+            color: var(--blanco);
+            border-color: var(--naranja);
+        }
+
+        .promo-card.destacada .promo-card-titulo {
+            color: var(--blanco);
+        }
+        .promo-card.destacada .promo-card-descripcion {
+            color: #ccc;
+        }
+        .promo-card.destacada .promo-card-precio {
+            color: var(--naranja-claro);
+        }
+
+        .promo-card-badge {
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background: var(--naranja);
+            color: var(--blanco);
+            padding: 8px 50px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transform: rotate(45deg);
+            box-shadow: var(--sombra-sm);
+        }
+
+        .promo-card-icono {
+            font-size: 3rem;
+            margin-bottom: 4px;
+        }
+
+        .promo-card-titulo {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.3px;
+        }
+
+        .promo-card-descripcion {
+            color: var(--gris-oscuro);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .promo-card-precio {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-size: 2rem;
+            color: var(--naranja);
+        }
+
+        .promo-card-precio .antes {
+            text-decoration: line-through;
+            font-size: 1rem;
+            color: #999;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .promo-card-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--naranja);
+            color: var(--blanco);
+            padding: 14px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all var(--transicion);
+            width: fit-content;
+            border: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 16px rgba(255, 90, 31, 0.25);
+        }
+
+        .promo-card-btn:hover {
+            background: var(--naranja-oscuro);
+            box-shadow: 0 8px 28px rgba(255, 90, 31, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .promo-card.destacada .promo-card-btn {
+            background: var(--blanco);
+            color: var(--negro);
+            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
+        }
+        .promo-card.destacada .promo-card-btn:hover {
+            background: var(--naranja);
+            color: var(--blanco);
+            box-shadow: 0 8px 28px rgba(255, 90, 31, 0.5);
+        }
+
+        /* ========== SOBRE NOSOTROS ========== */
+        .nosotros-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .nosotros-imagen {
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--naranja-palido);
+            border-radius: var(--borde-redondo-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10rem;
+            box-shadow: var(--sombra-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nosotros-imagen::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            right: -40px;
+            width: 150px;
+            height: 150px;
+            background: var(--naranja);
+            border-radius: 50%;
+            opacity: 0.25;
+        }
+
+        .nosotros-texto {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .nosotros-texto h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+        }
+
+        .nosotros-texto p {
+            color: var(--gris-oscuro);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .nosotros-valores {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        .valor-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: var(--blanco);
+            border-radius: var(--borde-redondo-md);
+            box-shadow: var(--sombra-sm);
+            transition: all var(--transicion);
+        }
+
+        .valor-item:hover {
+            box-shadow: var(--sombra-md);
+            transform: translateY(-2px);
+        }
+
+        .valor-icono {
+            width: 44px;
+            height: 44px;
+            background: var(--naranja-palido);
+            border-radius: var(--borde-redondo-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .valor-texto h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+        .valor-texto p {
+            font-size: 0.8rem;
+            color: var(--gris-oscuro);
+            line-height: 1.4;
+        }
+
+        /* ========== CONTACTO ========== */
+        .contacto-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+        }
+
+        .contacto-formulario {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .campo label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.2px;
+        }
+
+        .campo input,
+        .campo textarea {
+            padding: 14px 18px;
+            border: 2px solid var(--gris-medio);
+            border-radius: var(--borde-redondo-md);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all var(--transicion);
+            background: var(--blanco);
+            color: var(--negro);
+            resize: vertical;
+        }
+
+        .campo input:focus,
+        .campo textarea:focus {
+            outline: none;
+            border-color: var(--naranja);
+            box-shadow: 0 0 0 4px rgba(255, 90, 31, 0.08);
+        }
+
+        .campo textarea {
+            min-height: 130px;
+        }
+
+        .btn-enviar {
+            background: var(--naranja);
+            color: var(--blanco);
+            padding: 16px 32px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transicion);
+            letter-spacing: 0.3px;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 16px rgba(255, 90, 31, 0.25);
+            width: fit-content;
+        }
+
+        .btn-enviar:hover {
+            background: var(--naranja-oscuro);
+            box-shadow: 0 8px 28px rgba(255, 90, 31, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .contacto-info {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .contacto-info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .contacto-info-icono {
+            width: 50px;
+            height: 50px;
+            background: var(--naranja-palido);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .contacto-info-texto h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+        .contacto-info-texto p {
+            color: var(--gris-oscuro);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .contacto-mapa {
+            border-radius: var(--borde-redondo-lg);
+            overflow: hidden;
+            box-shadow: var(--sombra-md);
+            margin-top: 8px;
+            background: var(--naranja-palido);
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--naranja);
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: var(--negro);
+            color: var(--blanco);
+            padding: 60px 32px 30px;
+        }
+
+        .footer-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 16px;
+            color: var(--blanco);
+        }
+
+        .footer-col p,
+        .footer-col a {
+            color: #aaa;
+            font-size: 0.9rem;
+            text-decoration: none;
+            line-height: 2;
+            transition: color var(--transicion);
+        }
+
+        .footer-col a:hover {
+            color: var(--naranja);
+        }
+
+        .footer-logo {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+        }
+        .footer-logo span {
+            color: var(--naranja);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: #2a2a2a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all var(--transicion);
+            color: #ccc;
+            text-decoration: none;
+        }
+
+        .footer-social a:hover {
+            background: var(--naranja);
+            color: var(--blanco);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding-top: 24px;
+            border-top: 1px solid #2a2a2a;
+            text-align: center;
+            color: #777;
+            font-size: 0.85rem;
+        }
+
+        /* ========== BOTÓN SCROLL-TO-TOP ========== */
+        .scroll-top {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            width: 50px;
+            height: 50px;
+            background: var(--naranja);
+            color: var(--blanco);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem;
+            z-index: 999;
+            box-shadow: var(--sombra-md);
+            transition: all var(--transicion);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .scroll-top:hover {
+            background: var(--naranja-oscuro);
+            box-shadow: var(--sombra-lg);
+            transform: translateY(-4px);
+        }
+
+        /* ========== ANIMACIONES SCROLL ========== */
+        .animar-revelar {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .animar-revelar.revelado {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== MENÚ MÓVIL OVERLAY ========== */
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transicion);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+
+        .menu-overlay.activo {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .hero-contenido {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+            .hero-texto {
+                align-items: center;
+            }
+            .hero-descripcion {
+                max-width: 100%;
+            }
+            .hero-botones {
+                justify-content: center;
+            }
+            .hero-visual {
+                order: -1;
+            }
+            .hero-imagen-principal {
+                max-width: 300px;
+                font-size: 7rem;
+            }
+            .hero-badge {
+                width: 70px;
+                height: 70px;
+                bottom: -10px;
+                right: -10px;
+            }
+            .hero-badge .badge-precio {
+                font-size: 1.2rem;
+            }
+            .hero-badge .badge-texto {
+                font-size: 0.5rem;
+            }
+            .hero-fondo {
+                width: 350px;
+                height: 350px;
+                top: -60px;
+                right: -60px;
+            }
+            .nosotros-grid {
+                grid-template-columns: 1fr;
+                gap: 36px;
+            }
+            .nosotros-imagen {
+                max-width: 350px;
+                margin: 0 auto;
+                font-size: 7rem;
+            }
+            .contacto-grid {
+                grid-template-columns: 1fr;
+                gap: 36px;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
+            .promos-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: var(--blanco);
+                flex-direction: column;
+                padding: 100px 32px 40px;
+                gap: 28px;
+                box-shadow: var(--sombra-xl);
+                transition: right var(--transicion);
+                z-index: 1000;
+                align-items: flex-start;
+            }
+
+            .nav-links.activo {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.05rem;
+                font-weight: 600;
+            }
+
+            .btn-nav {
+                padding: 14px 28px !important;
+                font-size: 0.95rem !important;
+            }
+
+            .hamburguesa {
+                display: flex;
+            }
+
+            .seccion {
+                padding: 70px 20px;
+            }
+            .hero {
+                padding: 100px 20px 60px;
+            }
+            .hero-titulo {
+                font-size: 2.2rem;
+            }
+            .menu-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+            .menu-card-imagen {
+                height: 150px;
+                font-size: 3.5rem;
+            }
+            .menu-card-info {
+                padding: 14px 16px 18px;
+            }
+            .menu-card-nombre {
+                font-size: 1rem;
+            }
+            .menu-card-precio {
+                font-size: 1.2rem;
+            }
+            .nosotros-valores {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+            .seccion-titulo {
+                font-size: 1.8rem;
+            }
+            .promo-card {
+                padding: 24px 20px;
+            }
+            .promo-card-titulo {
+                font-size: 1.3rem;
+            }
+            .promo-card-precio {
+                font-size: 1.5rem;
+            }
+            .nav-container {
+                padding: 0 20px;
+            }
+            .logo-texto {
+                font-size: 1.2rem;
+            }
+            .logo-icono {
+                width: 36px;
+                height: 36px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+                max-width: 360px;
+                margin: 0 auto;
+            }
+            .hero-imagen-principal {
+                max-width: 220px;
+                font-size: 5rem;
+            }
+            .hero-badge {
+                width: 56px;
+                height: 56px;
+                bottom: -8px;
+                right: -8px;
+            }
+            .hero-badge .badge-precio {
+                font-size: 1rem;
+            }
+            .hero-botones {
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+            .btn-primario,
+            .btn-secundario {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+                padding: 14px 24px;
+                font-size: 0.9rem;
+            }
+            .hero-etiqueta {
+                font-size: 0.75rem;
+                padding: 6px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== HEADER / NAV ==================== -->
+    <header class="header" id="header">
+        <div class="nav-container">
+            <a href="#" class="logo" aria-label="Kentakitos Inicio">
+                <div class="logo-icono">K</div>
+                <span class="logo-texto">Kentaki<span>tos</span></span>
+            </a>
+
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#inicio" class="activo">Inicio</a></li>
+                    <li><a href="#menu">Menú</a></li>
+                    <li><a href="#promociones">Promociones</a></li>
+                    <li><a href="#nosotros">Nosotros</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                    <li><a href="#contacto" class="btn-nav">Ordenar Ahora</a></li>
+                </ul>
+            </nav>
+
+            <button class="hamburguesa" id="hamburguesa" aria-label="Menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Overlay menú móvil -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- ==================== HERO ==================== -->
+    <section class="hero" id="inicio">
+        <div class="hero-fondo"></div>
+        <div class="hero-fondo-dos"></div>
+        <div class="hero-contenido">
+            <div class="hero-texto animar-revelar">
+                <div class="hero-etiqueta">
+                    <span class="punto"></span> Abierto todos los días
+                </div>
+                <h1 class="hero-titulo">
+                    El sabor <span class="destacado">regional</span> que<br>te enamora
+                </h1>
+                <p class="hero-descripcion">
+                    Pollo crujiente, yuca dorada y recetas auténticas con el toque casero de siempre. En <strong>Kentakitos</strong> combinamos lo mejor de la comida rápida con los sabores de nuestra tierra.
+                </p>
+                <div class="hero-botones">
+                    <a href="#menu" class="btn-primario">
+                        Ver Menú 🍗
+                    </a>
+                    <a href="#promociones" class="btn-secundario">
+                        Promos del Día
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual animar-revelar">
+                <div class="hero-imagen-principal">
+                    🍗
+                </div>
+                <div class="hero-badge">
+                    <span class="badge-precio">$6.99</span>
+                    <span class="badge-texto">Combo</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== MENÚ ==================== -->
+    <section class="seccion seccion-gris" id="menu">
+        <div class="contenedor">
+            <div class="seccion-encabezado animar-revelar">
+                <span class="seccion-etiqueta">Nuestro Menú</span>
+                <h2 class="seccion-titulo">Hecho con amor,<br>servido con sabor</h2>
+                <p class="seccion-subtitulo">Cada platillo está preparado al momento con ingredientes frescos y recetas que honran nuestras raíces.</p>
+            </div>
+
+            <div class="menu-grid">
+                <!-- Item 1 -->
+                <div class="menu-card animar-revelar">
+                    <div class="menu-card-imagen">🍗</div>
+                    <div class="menu-card-info">
+                        <span class="menu-card-etiqueta destacada">⭐ Favorito</span>
+                        <h3 class="menu-card-nombre">Kentaki Combo</h3>
+                        <p class="menu-card-descripcion">2 piezas de pollo crujiente + yuca frita + ensalada fresca + bebida</p>
+                        <div class="menu-card-precio"><span class="moneda">$</span>7.99</div>
+                        <button class="menu-card-btn">Agregar →</button>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="menu-card animar-revelar">
+                    <div class="menu-card-imagen">🍔</div>
+                    <div class="menu-card-info">
+                        <h3 class="menu-card-nombre">Súper Kentaki</h3>
+                        <p class="menu-card-descripcion">Sandwich de pollo extra crujiente con patacones y salsa de la casa</p>
+                        <div class="menu-card-precio"><span class="moneda">$</span>6.49</div>
+                        <button class="menu-card-btn">Agregar →</button>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="menu-card animar-revelar">
+                    <div class="menu-card-imagen">🍚</div>
+                    <div class="menu-card-info">
+                        <span class="menu-card-etiqueta">Nuevo</span>
+                        <h3 class="menu-card-nombre">Kentaki Bowl</h3>
+                        <p class="menu-card-descripcion">Bowl de arroz con pollo desmechado, frijoles, maduritos y aguacate</p>
+                        <div class="menu-card-precio"><span class="moneda">$</span>8.49</div>
+                        <button class="menu-card-btn">Agregar →</button>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="menu-card animar-revelar">
+                    <div class="menu-card-imagen">🍟</div>
+                    <div class="menu-card-info">
+                        <h3 class="menu-card-nombre">Mega Combo</h3>
+                        <p class="menu-card-descripcion">4 piezas de pollo + 2 acompañantes a elegir + bebida grande</p>
+                        <div class="menu-card-precio"><span class="moneda">$</span>12.99</div>
+                        <button class="menu-card-btn">Agregar →</button>
+                    </div>
+                </div>
+
+                <!-- Item 5 -->
+                <div class="menu-card animar-revelar">
+                    <div class="menu-card-imagen">🥟</div>
+                    <div class="menu-card-info">
+                        <h3 class="menu-card-nombre">Arepa Kentaki</h3>
+                        <p class="menu-card-descripcion">Arepa rellena de pollo, queso y guasacaca. Sabor 100% regional</p>
+                        <div class="menu-card-precio"><span class="moneda">$</span>5.49</div>
+                        <button class="menu-card-btn">Agregar →</button>
+                    </div>
+                </div>
+
+                <!-- Item 6 -->
+                <div class="menu-card animar-revelar">
+                    <div class="menu-card-imagen">🥤</div>
+                    <div class="menu-card-info">
+                        <h3 class="menu-card-nombre">Chicha & Maracuyá</h3>
+                        <p class="menu-card-descripcion">Bebidas naturales: chicha morada o jugo de maracuyá bien frío</p>
+                        <div class="menu-card-precio"><span class="moneda">$</span>3.49</div>
+                        <button class="menu-card-btn">Agregar →</button>
+                    </div>
+                </div>
+
+                <!-- Item 7 -->
+                <div class="menu-card animar-revelar">
+                    <div class="menu-card-imagen">🍌</div>
+                    <div class="menu-card-info">
+                        <h3 class="menu-card-nombre">Patacones Kentaki</h3>
+                        <p class="menu-card-descripcion">Patacones crocantes con pollo desmechado y queso rallado</p>
+                        <div class="menu-card-precio"><span class="moneda">$</span>5.99</div>
+                        <button class="menu-card-btn">Agregar →</button>
+                    </div>
+                </div>
+
+                <!-- Item 8 -->
+                <div class="menu-card animar-revelar">
+                    <div class="menu-card-imagen">🍮</div>
+                    <div class="menu-card-info">
+                        <h3 class="menu-card-nombre">Flan de Caramelo</h3>
+                        <p class="menu-card-descripcion">Postre casero de flan con caramelo. El cierre perfecto</p>
+                        <div class="menu-card-precio"><span class="moneda">$</span>3.99</div>
+                        <button class="menu-card-btn">Agregar →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PROMOCIONES ==================== -->
+    <section class="seccion" id="promociones">
+        <div class="contenedor">
+            <div class="seccion-encabezado animar-revelar">
+                <span class="seccion-etiqueta">Promociones</span>
+                <h2 class="seccion-titulo">Ofertas que te<br>hacen feliz</h2>
+                <p class="seccion-subtitulo">Porque comer rico no tiene que costar caro. Aprovecha nuestras promos especiales.</p>
+            </div>
+
+            <div class="promos-grid">
+                <!-- Promo 1 -->
+                <div class="promo-card animar-revelar">
+                    <div class="promo-card-badge">🔥 Top</div>
+                    <div class="promo-card-icono">🎉</div>
+                    <h3 class="promo-card-titulo">Combo Familiar</h3>
+                    <p class="promo-card-descripcion">8 piezas de pollo + 3 acompañantes grandes + 4 bebidas. Ideal para compartir en familia.</p>
+                    <div class="promo-card-precio">
+                        <span class="antes">$28.99</span> $22.99
+                    </div>
+                    <button class="promo-card-btn">¡Lo Quiero! →</button>
+                </div>
+
+                <!-- Promo 2 (destacada) -->
+                <div class="promo-card destacada animar-revelar">
+                    <div class="promo-card-badge">⚡ Oferta</div>
+                    <div class="promo-card-icono">💥</div>
+                    <h3 class="promo-card-titulo">2×1 en Kentaki Combos</h3>
+                    <p class="promo-card-descripcion">Lleva dos combos individuales por el precio de uno. Solo martes y miércoles.</p>
+                    <div class="promo-card-precio">
+                        <span class="antes">$15.98</span> $7.99
+                    </div>
+                    <button class="promo-card-btn">Aprovechar →</button>
+                </div>
+
+                <!-- Promo 3 -->
+                <div class="promo-card animar-revelar">
+                    <div class="promo-card-badge">🕐 Happy Hour</div>
+                    <div class="promo-card-icono">⏰</div>
+                    <h3 class="promo-card-titulo">Happy Kentaki</h3>
+                    <p class="promo-card-descripcion">De 3pm a 6pm: bebidas a mitad de precio con cualquier combo. Refréscate por menos.</p>
+                    <div class="promo-card-precio">
+                        <span class="antes">$3.49</span> $1.75
+                    </div>
+                    <button class="promo-card-btn">Ver Más →</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SOBRE NOSOTROS ==================== -->
+    <section class="seccion seccion-gris" id="nosotros">
+        <div class="contenedor">
+            <div class="nosotros-grid">
+                <div class="nosotros-imagen animar-revelar">
+                    🏠
+                </div>
+                <div class="nosotros-texto animar-revelar">
+                    <span class="seccion-etiqueta">Sobre Nosotros</span>
+                    <h3>Una historia de sabor y tradición</h3>
+                    <p>
+                        <strong>Kentakitos</strong> nació en el corazón de la región, del sueño de una familia que quiso compartir el auténtico sabor del pollo frito con el toque especial de las recetas caseras de la abuela. Desde nuestro primer local, nos propusimos hacer las cosas diferentes: ingredientes frescos, preparación al momento y ese cariño que solo se encuentra en la cocina de casa.
+                    </p>
+                    <p>
+                        Hoy, cada Kentaki Combo, cada arepa y cada patacón llevan consigo esa misma pasión. No somos solo comida rápida; somos <strong>sabor regional con corazón</strong>.
+                    </p>
+                    <div class="nosotros-valores">
+                        <div class="valor-item">
+                            <div class="valor-icono">🌿</div>
+                            <div class="valor-texto">
+                                <h4>Ingredientes Frescos</h4>
+                                <p>Seleccionados cada día de productores locales.</p>
+                            </div>
+                        </div>
+                        <div class="valor-item">
+                            <div class="valor-icono">🔥</div>
+                            <div class="valor-texto">
+                                <h4>Hecho al Momento</h4>
+                                <p>Nada de comida recalentada. Todo fresco y crujiente.</p>
+                            </div>
+                        </div>
+                        <div class="valor-item">
+                            <div class="valor-icono">❤️</div>
+                            <div class="valor-texto">
+                                <h4>Recetas de la Abuela</h4>
+                                <p>El toque secreto que nos hace únicos.</p>
+                            </div>
+                        </div>
+                        <div class="valor-item">
+                            <div class="valor-icono">🤝</div>
+                            <div class="valor-texto">
+                                <h4>Compromiso Local</h4>
+                                <p>Apoyamos a nuestra comunidad y su economía.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CONTACTO ==================== -->
+    <section class="seccion" id="contacto">
+        <div class="contenedor">
+            <div class="seccion-encabezado animar-revelar">
+                <span class="seccion-etiqueta">Contáctanos</span>
+                <h2 class="seccion-titulo">Hablemos,<br>te escuchamos</h2>
+                <p class="seccion-subtitulo">¿Tienes un pedido grande, una sugerencia o simplemente quieres saludar? Escríbenos.</p>
+            </div>
+
+            <div class="contacto-grid">
+                <form class="contacto-formulario animar-revelar" id="formularioContacto">
+                    <div class="campo">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
+                    </div>
+                    <div class="campo">
+                        <label for="email">Correo Electrónico</label>
+                        <input type="email" id="email" name="email" placeholder="tu@correo.com" required>
+                    </div>
+                    <div class="campo">
+                        <label for="mensaje">Mensaje</label>
+                        <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos qué necesitas..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-enviar">Enviar Mensaje ✉️</button>
+                </form>
+
+                <div class="contacto-info animar-revelar">
+                    <div class="contacto-info-item">
+                        <div class="contacto-info-icono">📍</div>
+                        <div class="contacto-info-texto">
+                            <h4>Visítanos</h4>
+                            <p>Av. Principal #123, Centro Comercial Las Palmas, Local 5<br>Ciudad Regional, CP 45678</p>
+                        </div>
+                    </div>
+                    <div class="contacto-info-item">
+                        <div class="contacto-info-icono">📞</div>
+                        <div class="contacto-info-texto">
+                            <h4>Llámanos</h4>
+                            <p>+52 555 123 4567<br>+52 555 987 6543</p>
+                        </div>
+                    </div>
+                    <div class="contacto-info-item">
+                        <div class="contacto-info-icono">✉️</div>
+                        <div class="contacto-info-texto">
+                            <h4>Correo</h4>
+                            <p>hola@kentakitos.com<br>pedidos@kentakitos.com</p>
+                        </div>
+                    </div>
+                    <div class="contacto-info-item">
+                        <div class="contacto-info-icono">🕐</div>
+                        <div class="contacto-info-texto">
+                            <h4>Horario</h4>
+                            <p>Lunes a Viernes: 11:00 AM - 10:00 PM<br>Sábados y Domingos: 12:00 PM - 11:00 PM</p>
+                        </div>
+                    </div>
+                    <div class="contacto-mapa">
+                        🗺️ Mapa / Ubicación
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-logo">Kentaki<span>tos</span></div>
+                <p style="color:#aaa; line-height:1.7; margin-bottom:8px;">
+                    Comida rápida con sabor regional. Pollo crujiente, yuca dorada y el auténtico sazón de nuestra tierra.
+                </p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Facebook">f</a>
+                    <a href="#" aria-label="Instagram">📷</a>
+                    <a href="#" aria-label="TikTok">🎵</a>
+                    <a href="#" aria-label="WhatsApp">💬</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Enlaces Rápidos</h4>
+                <a href="#inicio">Inicio</a><br>
+                <a href="#menu">Menú</a><br>
+                <a href="#promociones">Promociones</a><br>
+                <a href="#nosotros">Sobre Nosotros</a><br>
+                <a href="#contacto">Contacto</a>
+            </div>
+            <div class="footer-col">
+                <h4>Más Info</h4>
+                <a href="#">Términos y Condiciones</a><br>
+                <a href="#">Política de Privacidad</a><br>
+                <a href="#">Aviso Legal</a><br>
+                <a href="#">Trabaja con Nosotros</a>
+            </div>
+            <div class="footer-col">
+                <h4>Kentakitos App</h4>
+                <p style="color:#aaa; line-height:1.7;">Descarga nuestra app y recibe ofertas exclusivas, acumula puntos y pide desde tu celular.</p>
+                <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+                    <span style="background:#2a2a2a;padding:10px 16px;border-radius:20px;font-size:0.8rem;color:#ccc;">📱 App Store</span>
+                    <span style="background:#2a2a2a;padding:10px 16px;border-radius:20px;font-size:0.8rem;color:#ccc;">🤖 Google Play</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 <strong>Kentakitos</strong>. Todos los derechos reservados. Hecho con ❤️ y mucho sabor.
+        </div>
+    </footer>
+
+    <!-- ==================== SCROLL TO TOP ==================== -->
+    <button class="scroll-top" id="scrollTop" aria-label="Volver arriba" title="Volver arriba">
+        ↑
+    </button>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script>
+        (function() {
+            // ----- Elementos del DOM -----
+            const header = document.getElementById('header');
+            const hamburguesa = document.getElementById('hamburguesa');
+            const navLinks = document.getElementById('navLinks');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const scrollTopBtn = document.getElementById('scrollTop');
+            const formulario = document.getElementById('formularioContacto');
+            const todosLosLinksNav = navLinks.querySelectorAll('a');
+            const secciones = document.querySelectorAll(
+                'section[id], .hero[id]');
+            const elementosAnimar = document.querySelectorAll('.animar-revelar');
+
+            // ----- Header scroll effect -----
+            function actualizarHeaderScroll() {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            }
+
+            // ----- Scroll to top button -----
+            function actualizarScrollTop() {
+                if (window.scrollY > 600) {
+                    scrollTopBtn.classList.add('visible');
+                } else {
+                    scrollTopBtn.classList.remove('visible');
+                }
+            }
+
+            // ----- Menú móvil -----
+            function abrirMenu() {
+                navLinks.classList.add('activo');
+                menuOverlay.classList.add('activo');
+                hamburguesa.classList.add('activo');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function cerrarMenu() {
+                navLinks.classList.remove('activo');
+                menuOverlay.classList.remove('activo');
+                hamburguesa.classList.remove('activo');
+                document.body.style.overflow = '';
+            }
+
+            hamburguesa.addEventListener('click', function() {
+                if (navLinks.classList.contains('activo')) {
+                    cerrarMenu();
+                } else {
+                    abrirMenu();
+                }
+            });
+
+            menuOverlay.addEventListener('click', cerrarMenu);
+
+            // Cerrar menú al hacer clic en un link
+            todosLosLinksNav.forEach(function(link) {
+                link.addEventListener('click', function() {
+                    if (navLinks.classList.contains('activo')) {
+                        cerrarMenu();
+                    }
+                });
+            });
+
+            // Cerrar menú con tecla Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && navLinks.classList.contains('activo')) {
+                    cerrarMenu();
+                }
+            });
+
+            // ----- Navegación activa según scroll -----
+            function actualizarLinkActivo() {
+                let seccionActual = '';
+                const scrollPos = window.scrollY + 120;
+
+                secciones.forEach(function(seccion) {
+                    const top = seccion.offsetTop;
+                    const height = seccion.offsetHeight;
+                    if (scrollPos >= top && scrollPos < top + height) {
+                        seccionActual = seccion.getAttribute('id');
+                    }
+                });
+
+                todosLosLinksNav.forEach(function(link) {
+                    link.classList.remove('activo');
+                    const href = link.getAttribute('href');
+                    if (href && href.replace('#', '') === seccionActual && !link.classList.contains(
+                            'btn-nav')) {
+                        link.classList.add('activo');
+                    }
+                });
+
+                // Si estamos al principio, activar "Inicio"
+                if (window.scrollY < 200) {
+                    todosLosLinksNav.forEach(function(link) {
+                        link.classList.remove('activo');
+                        if (link.getAttribute('href') === '#inicio') {
+                            link.classList.add('activo');
+                        }
+                    });
+                }
+            }
+
+            // ----- Intersection Observer para animaciones -----
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revelado');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.12,
+                rootMargin: '0px 0px -40px 0px'
+            });
+
+            elementosAnimar.forEach(function(el) {
+                observer.observe(el);
+            });
+
+            // ----- Formulario de contacto -----
+            formulario.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const nombre = document.getElementById('nombre').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const mensaje = document.getElementById('mensaje').value.trim();
+
+                if (!nombre || !email || !mensaje) {
+                    alert('⚠️ Por favor, completa todos los campos antes de enviar.');
+                    return;
+                }
+
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    alert('⚠️ Por favor, ingresa un correo electrónico válido.');
+                    return;
+                }
+
+                // Simulación de envío exitoso
+                alert(
+                    '✅ ¡Gracias, ' + nombre +
+                    '! Tu mensaje ha sido enviado con éxito. Te responderemos pronto. 🍗');
+                formulario.reset();
+            });
+
+            // ----- Scroll to top click -----
+            scrollTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // ----- Event listeners de scroll -----
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    requestAnimationFrame(function() {
+                        actualizarHeaderScroll();
+                        actualizarScrollTop();
+                        actualizarLinkActivo();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+
+            // ----- Inicialización -----
+            actualizarHeaderScroll();
+            actualizarScrollTop();
+            actualizarLinkActivo();
+
+            // Revelar elementos visibles al cargar
+            setTimeout(function() {
+                elementosAnimar.forEach(function(el) {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight - 60) {
+                        el.classList.add('revelado');
+                    }
+                });
+            }, 150);
+
+            console.log('🍗 Kentakitos - ¡Listo para servir sabor regional!');
+            console.log('💡 Navega por el menú, descubre promociones y contáctanos.');
+        })();
+    </script>
+</body>
+</html>
