@@ -1,16 +1,16 @@
 import { Plus, Search, Edit, Trash2, MoreVertical, UserCheck, UserX } from 'lucide-react';
-import { useState } from 'react';
-
-const users = [
-  { id: 1, name: 'Juan Pérez', email: 'juan@kentakitos.com', role: 'Administrador', status: 'Activo', avatar: '👨' },
-  { id: 2, name: 'María García', email: 'maria@kentakitos.com', role: 'Cajero', status: 'Activo', avatar: '👩' },
-  { id: 3, name: 'Carlos López', email: 'carlos@kentakitos.com', role: 'Cocina', status: 'Activo', avatar: '👨‍🍳' },
-  { id: 4, name: 'Ana Martínez', email: 'ana@kentakitos.com', role: 'Mesero', status: 'Activo', avatar: '👩‍🦰' },
-  { id: 5, name: 'Pedro Sánchez', email: 'pedro@kentakitos.com', role: 'Cajero', status: 'Inactivo', avatar: '👨‍💼' },
-];
+import { useState, useEffect } from 'react';
 
 export default function Users() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [users, setUsers] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch('http://shop.spring.informaticapp.com:2920/api/usuarios')
+      .then((res) => res.json())
+      .then((data) => setUsers(data))
+      .catch((error) => console.error('Error fetching users:', error));
+  }, []);
 
   return (
     <div className="space-y-6">

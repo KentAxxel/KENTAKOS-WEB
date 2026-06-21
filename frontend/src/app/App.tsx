@@ -54,7 +54,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <GoogleOAuthProvider clientId="527408127768-gina8rmjvj737t9v0n2hljhnk4c56j1o.apps.googleusercontent.com">
-      <BrowserRouter>
+      <BrowserRouter basename="/kentakitos/">
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<PublicPage />} />

@@ -19,7 +19,7 @@ export default function Register() {
     onSuccess: async codeResponse => {
       console.log('Google Login Success:', codeResponse);
       try {
-        const res = await fetch('http://localhost:8080/api/auth/google', {
+        const res = await fetch('http://shop.spring.informaticapp.com:2920/api/auth/google', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ accessToken: codeResponse.access_token })

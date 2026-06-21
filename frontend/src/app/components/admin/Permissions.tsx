@@ -1,36 +1,70 @@
-import { Check, X } from 'lucide-react';
+import { Check, X, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
-const modules = [
-  'Dashboard',
-  'Usuarios',
-  'Roles',
-  'Permisos',
-  'Mesas',
-  'Platillos',
-  'Inventario',
-  'Ventas',
-  'Reportes',
-  'Pedidos',
-  'Configuración',
-];
-
-const roles = ['Administrador', 'Gerente', 'Cajero', 'Cocina', 'Mesero'];
-
-const permissions = {
-  Dashboard: { Administrador: true, Gerente: true, Cajero: true, Cocina: true, Mesero: true },
-  Usuarios: { Administrador: true, Gerente: true, Cajero: false, Cocina: false, Mesero: false },
-  Roles: { Administrador: true, Gerente: false, Cajero: false, Cocina: false, Mesero: false },
-  Permisos: { Administrador: true, Gerente: false, Cajero: false, Cocina: false, Mesero: false },
-  Mesas: { Administrador: true, Gerente: true, Cajero: true, Cocina: false, Mesero: true },
-  Platillos: { Administrador: true, Gerente: true, Cajero: true, Cocina: true, Mesero: true },
-  Inventario: { Administrador: true, Gerente: true, Cajero: false, Cocina: true, Mesero: false },
-  Ventas: { Administrador: true, Gerente: true, Cajero: true, Cocina: false, Mesero: false },
-  Reportes: { Administrador: true, Gerente: true, Cajero: false, Cocina: false, Mesero: false },
-  Pedidos: { Administrador: true, Gerente: true, Cajero: true, Cocina: true, Mesero: true },
-  Configuración: { Administrador: true, Gerente: false, Cajero: false, Cocina: false, Mesero: false },
-};
+interface MatrizPermisosDTO {
+  modulos: string[];
+  roles: string[];
+  matriz: {
+    [modulo: string]: {
+      [rol: string]: boolean;
+    };
+  };
+}
 
 export default function Permissions() {
+  const [data, setData] = useState<MatrizPermisosDTO | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    cargarMatriz();
+  }, []);
+
+  const cargarMatriz = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await fetch('http://shop.spring.informaticapp.com:2920/api/admin/permissions');
+      
+      if (!response.ok) {
+        throw new Error('Error al cargar la matriz de permisos');
+      }
+      
+      const result: MatrizPermisosDTO = await response.json();
+      setData(result);
+    } catch (err) {
+      setError('No se pudieron cargar los permisos. Verifica que el backend esté corriendo.');
+      console.error('Error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[60vh]">
+        <Loader2 className="w-12 h-12 text-[#F77F00] animate-spin mb-4" />
+        <p className="text-gray-500 font-medium">Cargando matriz de permisos...</p>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center max-w-2xl mx-auto mt-12">
+        <X className="w-16 h-16 text-red-500 mx-auto mb-4 opacity-50" />
+        <p className="text-red-700 font-medium mb-4">{error}</p>
+        <button 
+          onClick={cargarMatriz}
+          className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+        >
+          Reintentar
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -45,8 +79,8 @@ export default function Permissions() {
           <table className="w-full">
             <thead className="bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white">
               <tr>
-                <th className="px-6 py-4 text-left font-semibold">Módulo</th>
-                {roles.map((role) => (
+                <th className="px-6 py-4 text-left font-semibold">Módulo (Permiso)</th>
+                {data.roles.map((role) => (
                   <th key={role} className="px-6 py-4 text-center font-semibold">
                     {role}
                   </th>
@@ -54,13 +88,13 @@ export default function Permissions() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {modules.map((module, index) => (
+              {data.modulos.map((module, index) => (
                 <tr key={module} className={`hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
                   <td className="px-6 py-4 font-medium text-[#111111]">{module}</td>
-                  {roles.map((role) => (
+                  {data.roles.map((role) => (
                     <td key={`${module}-${role}`} className="px-6 py-4 text-center">
-                      <button className="mx-auto">
-                        {permissions[module as keyof typeof permissions][role] ? (
+                      <button className="mx-auto" disabled title="Edición deshabilitada temporalmente">
+                        {data.matriz[module] && data.matriz[module][role] ? (
                           <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center hover:bg-green-200 transition-colors">
                             <Check className="w-5 h-5 text-green-600" />
                           </div>
@@ -74,6 +108,14 @@ export default function Permissions() {
                   ))}
                 </tr>
               ))}
+              
+              {data.modulos.length === 0 && (
+                <tr>
+                  <td colSpan={data.roles.length + 1} className="px-6 py-8 text-center text-gray-500">
+                    No se encontraron permisos registrados en la base de datos.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -88,7 +130,7 @@ export default function Permissions() {
             </div>
             <div>
               <h4 className="font-bold text-green-700">Permiso Concedido</h4>
-              <p className="text-sm text-green-600">El rol tiene acceso a este módulo</p>
+              <p className="text-sm text-green-600">El rol tiene acceso a este permiso</p>
             </div>
           </div>
         </div>
@@ -99,16 +141,16 @@ export default function Permissions() {
             </div>
             <div>
               <h4 className="font-bold text-red-700">Permiso Denegado</h4>
-              <p className="text-sm text-red-600">El rol no tiene acceso a este módulo</p>
+              <p className="text-sm text-red-600">El rol no tiene acceso a este permiso</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Save Button */}
-      <div className="flex justify-end">
-        <button className="bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white px-8 py-3 rounded-lg hover:shadow-lg transition-all">
-          Guardar Cambios
+      <div className="flex justify-end opacity-50 cursor-not-allowed">
+        <button disabled className="bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white px-8 py-3 rounded-lg cursor-not-allowed">
+          Guardar Cambios (Próximamente)
         </button>
       </div>
     </div>
