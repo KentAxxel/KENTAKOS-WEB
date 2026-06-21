@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Clock, Tag, Sparkles } from 'lucide-react';
 
 const promotions = [
@@ -40,6 +41,7 @@ const promotions = [
 ];
 
 export default function Promotions() {
+  const navigate = useNavigate();
   return (
     <section id="promociones" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -92,7 +94,10 @@ export default function Promotions() {
                 </div>
 
                 {/* CTA Button */}
-                <button className={`w-full mt-6 bg-gradient-to-r ${promo.color} text-white py-3 rounded-lg hover:shadow-lg transition-all flex items-center justify-center space-x-2`}>
+                <button 
+                  onClick={() => navigate('/login')}
+                  className={`w-full mt-6 bg-gradient-to-r ${promo.color} text-white py-3 rounded-lg hover:shadow-lg transition-all flex items-center justify-center space-x-2`}
+                >
                   <Tag className="w-5 h-5" />
                   <span>Ordenar Ahora</span>
                 </button>

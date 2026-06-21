@@ -36,7 +36,7 @@ export default function Navbar() {
               Contacto
             </a>
             <button
-              onClick={() => navigate('/admin')}
+              onClick={() => navigate('/login')}
               className="bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all flex items-center space-x-2"
             >
               <ShoppingCart className="w-4 h-4" />
@@ -72,7 +72,7 @@ export default function Navbar() {
               Contacto
             </a>
             <button
-              onClick={() => navigate('/admin')}
+              onClick={() => navigate('/login')}
               className="w-full bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all"
             >
               Ordenar Ahora

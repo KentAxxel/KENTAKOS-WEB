@@ -18,6 +18,9 @@ import Sales from './components/admin/Sales';
 import Reports from './components/admin/Reports';
 import Orders from './components/admin/Orders';
 import Settings from './components/admin/Settings';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import Login from './components/public/Login';
+import Register from './components/public/Register';
 
 // Public Landing Page
 function PublicPage() {
@@ -50,13 +53,16 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<PublicPage />} />
+    <GoogleOAuthProvider clientId="527408127768-gina8rmjvj737t9v0n2hljhnk4c56j1o.apps.googleusercontent.com">
+      <BrowserRouter>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<PublicPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        {/* Admin Routes */}
-        <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
         <Route path="/admin/users" element={<AdminLayout><Users /></AdminLayout>} />
         <Route path="/admin/roles" element={<AdminLayout><Roles /></AdminLayout>} />
         <Route path="/admin/permissions" element={<AdminLayout><Permissions /></AdminLayout>} />
@@ -69,5 +75,6 @@ export default function App() {
         <Route path="/admin/settings" element={<AdminLayout><Settings /></AdminLayout>} />
       </Routes>
     </BrowserRouter>
+    </GoogleOAuthProvider>
   );
 }

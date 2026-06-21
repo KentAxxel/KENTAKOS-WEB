@@ -25,6 +25,7 @@ public class Usuarios {
     private String username;
     private String contrasena;
     private Integer telefono;
+    private String authProvider; // "LOCAL" or "GOOGLE"
     private Integer deleted = 1;
 
     public Usuarios() {}
