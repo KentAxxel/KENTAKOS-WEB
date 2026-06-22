@@ -8,6 +8,6 @@ public interface IDetallePedidoService {
     List<DetallePedido> buscarTodos();
     DetallePedido guardar(DetallePedido detallePedido);
     DetallePedido modificar(DetallePedido detallePedido);
-    Optional<DetallePedido> buscarId(Integer id);
+    Optional<DetallePedido> buscarPorId(Integer id);
     void eliminar(Integer id);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kentakitos.backend.entity.Categorias;
+import kentakitos.backend.entity.CategoriasDTO;
 import kentakitos.backend.service.ICategoriasService;
 
 @RestController
@@ -29,15 +31,24 @@ public class CategoriasController {
     }
 
     @PostMapping("/categorias")
-    public Categorias guardar(@RequestBody Categorias categoria) {
-        serviCategorias.guardar(categoria);
-        return categoria;
+    public ResponseEntity<?> guardar(@RequestBody CategoriasDTO dto) {
+        Categorias categoria = new Categorias();
+        categoria.setNombrecategoria(dto.getNombrecategoria());
+        return ResponseEntity.ok(serviCategorias.guardar(categoria));
     }
 
     @PutMapping("/categorias")
-    public Categorias modificar(@RequestBody Categorias categoria) {
-        serviCategorias.modificar(categoria);
-        return categoria;
+    public ResponseEntity<?> modificar(@RequestBody CategoriasDTO dto) {
+
+        if (dto.getIdcategoria() == null) {
+            return ResponseEntity.badRequest().body("ID no existe");
+        }
+
+        Categorias categoria = new Categorias();
+        categoria.setIdcategoria(dto.getIdcategoria());
+        categoria.setNombrecategoria(dto.getNombrecategoria());
+        
+        return ResponseEntity.ok(serviCategorias.modificar(categoria));
     }
 
     @GetMapping("/categorias/{id}")
