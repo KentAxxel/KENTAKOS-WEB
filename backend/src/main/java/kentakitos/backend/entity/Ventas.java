@@ -28,7 +28,7 @@ public class Ventas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idventa;
     private LocalDate fecha;
-    private Integer deleted;
+    private Integer deleted = 1;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idcliente")

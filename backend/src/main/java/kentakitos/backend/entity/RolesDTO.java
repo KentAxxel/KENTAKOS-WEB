@@ -16,15 +16,10 @@ import lombok.Data;
 @Where(clause = "deleted = 1")
 @Data
 
-public class Roles {
+public class RolesDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idrol;
     private String nombrerol;
     private Integer deleted = 1;
-
-    public Roles() {}
-    public Roles(Integer id) {
-        this.idrol = id;
-    }
 }

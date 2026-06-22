@@ -1,5 +1,7 @@
 package kentakitos.backend.entity;
 
+import java.time.LocalDateTime;
+
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -11,20 +13,18 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "roles")
-@SQLDelete(sql = "UPDATE roles SET deleted = 0 WHERE idrol = ?")
+@Table(name = "inventario")
+@SQLDelete(sql = "UPDATE inventario SET deleted = 0 WHERE idinventario = ?")
 @Where(clause = "deleted = 1")
 @Data
 
-public class Roles {
+public class InventarioDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idrol;
-    private String nombrerol;
+    private Integer idinventario;
+    private String nombreinsumo;
+    private Integer cantidad;
+    private Integer cantidadmin;
+    private LocalDateTime fechaactualizacion;
     private Integer deleted = 1;
-
-    public Roles() {}
-    public Roles(Integer id) {
-        this.idrol = id;
-    }
 }

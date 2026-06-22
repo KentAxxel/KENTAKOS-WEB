@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdminPanel — Franquicia de Comida Rápida</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --naranja: #FF6B00;
+            --naranja-claro: #FF8C3A;
+            --naranja-oscuro: #E05D00;
+            --naranja-fondo: #FFF3E8;
+            --negro: #1A1A1A;
+            --negro-suave: #2C2C2C;
+            --blanco: #FFFFFF;
+            --gris-fondo: #F7F7F7;
+            --gris-borde: #E5E5E5;
+            --gris-texto: #777777;
+            --sombra-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --sombra-md: 0 4px 16px rgba(0, 0, 0, 0.10);
+            --sombra-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --radio: 12px;
+            --radio-sm: 8px;
+            --transicion: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --sidebar-ancho: 250px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--gris-fondo);
+            color: var(--negro);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-ancho);
+            height: 100vh;
+            background: var(--negro);
+            color: var(--blanco);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transicion), width var(--transicion);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 22px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo .logo-icono {
+            width: 42px;
+            height: 42px;
+            background: var(--naranja);
+            border-radius: var(--radio-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 900;
+            flex-shrink: 0;
+            color: #fff;
+        }
+
+        .sidebar-logo .logo-texto {
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+        }
+        .sidebar-logo .logo-texto span {
+            display: block;
+            font-weight: 400;
+            font-size: 0.7rem;
+            color: var(--naranja-claro);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 0;
+            list-style: none;
+        }
+
+        .sidebar-nav li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 20px;
+            color: #BBBBBB;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all var(--transicion);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sidebar-nav li a i {
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+            transition: color var(--transicion);
+        }
+
+        .sidebar-nav li a:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .sidebar-nav li a.activo {
+            color: #fff;
+            background: rgba(255, 107, 0, 0.18);
+            border-left-color: var(--naranja);
+            font-weight: 600;
+        }
+        .sidebar-nav li a.activo i {
+            color: var(--naranja);
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.75rem;
+            color: #666;
+            text-align: center;
+        }
+
+        /* ========== OVERLAY MÓVIL ========== */
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transicion);
+        }
+        .sidebar-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ========== CONTENIDO PRINCIPAL ========== */
+        .main-wrapper {
+            margin-left: var(--sidebar-ancho);
+            min-height: 100vh;
+            transition: margin-left var(--transicion);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== TOP BAR ========== */
+        .topbar {
+            background: var(--blanco);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            border-bottom: 1px solid var(--gris-borde);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--sombra-sm);
+            flex-wrap: wrap;
+        }
+
+        .topbar-izq {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .btn-hamburguesa {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--negro);
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background var(--transicion);
+        }
+        .btn-hamburguesa:hover {
+            background: var(--gris-fondo);
+        }
+
+        .topbar-titulo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--negro);
+            letter-spacing: -0.3px;
+        }
+        .topbar-titulo .modulo-nombre {
+            color: var(--naranja);
+        }
+
+        .topbar-der {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .topbar-der .icono-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--gris-texto);
+            cursor: pointer;
+            position: relative;
+            padding: 6px;
+            border-radius: 50%;
+            transition: all var(--transicion);
+        }
+        .topbar-der .icono-btn:hover {
+            color: var(--naranja);
+            background: var(--naranja-fondo);
+        }
+        .badge-punto {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 9px;
+            height: 9px;
+            background: var(--naranja);
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+        .avatar-top {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--negro);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* ========== ÁREA DE CONTENIDO ========== */
+        .contenido {
+            flex: 1;
+            padding: 24px 28px 40px;
+            max-width: 1400px;
+            width: 100%;
+        }
+        .seccion {
+            display: none;
+            animation: fadeIn 0.35s ease;
+        }
+        .seccion.activa {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========== TARJETAS DEL DASHBOARD ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: var(--blanco);
+            border-radius: var(--radio);
+            padding: 20px 22px;
+            box-shadow: var(--sombra-sm);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all var(--transicion);
+            cursor: default;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card:hover {
+            box-shadow: var(--sombra-md);
+            transform: translateY(-2px);
+            border-color: var(--naranja-claro);
+        }
+        .stat-card .stat-icono {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radio-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+        .stat-icono.naranja {
+            background: var(--naranja-fondo);
+            color: var(--naranja);
+        }
+        .stat-icono.negro {
+            background: #f0f0f0;
+            color: var(--negro);
+        }
+        .stat-info .stat-valor {
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+        .stat-info .stat-label {
+            font-size: 0.8rem;
+            color: var(--gris-texto);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        .stat-card .stat-barra-deco {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--naranja);
+            border-radius: 0 0 var(--radio) var(--radio);
+            opacity: 0;
+            transition: opacity var(--transicion);
+        }
+        .stat-card:hover .stat-barra-deco {
+            opacity: 1;
+        }
+
+        /* ========== TABLAS ========== */
+        .panel {
+            background: var(--blanco);
+            border-radius: var(--radio);
+            box-shadow: var(--sombra-sm);
+            overflow: hidden;
+        }
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--gris-borde);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .panel-header h2 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 18px;
+            border-radius: var(--radio-sm);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: none;
+            transition: all var(--transicion);
+            letter-spacing: -0.2px;
+            white-space: nowrap;
+        }
+        .btn-primario {
+            background: var(--naranja);
+            color: #fff;
+        }
+        .btn-primario:hover {
+            background: var(--naranja-oscuro);
+            box-shadow: 0 4px 14px rgba(255, 107, 0, 0.3);
+        }
+        .btn-outline {
+            background: #fff;
+            color: var(--naranja);
+            border: 1.5px solid var(--naranja);
+        }
+        .btn-outline:hover {
+            background: var(--naranja-fondo);
+        }
+        .btn-ghost {
+            background: transparent;
+            color: var(--negro);
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+        .btn-ghost:hover {
+            background: var(--gris-fondo);
+        }
+        .btn-peligro {
+            color: #d00;
+        }
+        .btn-peligro:hover {
+            background: #fff0f0;
+            color: #b00;
+        }
+        .btn-xs {
+            padding: 5px 10px;
+            font-size: 0.75rem;
+            border-radius: 6px;
+        }
+
+        .tabla-contenedor {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            min-width: 600px;
+        }
+        table thead th {
+            background: var(--gris-fondo);
+            padding: 13px 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--gris-texto);
+            border-bottom: 2px solid var(--gris-borde);
+            white-space: nowrap;
+        }
+        table tbody td {
+            padding: 13px 16px;
+            border-bottom: 1px solid var(--gris-borde);
+            vertical-align: middle;
+        }
+        table tbody tr {
+            transition: background var(--transicion);
+        }
+        table tbody tr:hover {
+            background: #fafafa;
+        }
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Badges de estado */
+        .badge {
+            display: inline-block;
+            padding: 5px 11px;
+            border-radius: 20px;
+            font-size: 0.73rem;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+        }
+        .badge-exito {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .badge-advertencia {
+            background: #fff8e1;
+            color: #e65100;
+        }
+        .badge-info {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        .badge-neutro {
+            background: #f5f5f5;
+            color: #555;
+        }
+        .badge-peligro {
+            background: #ffebee;
+            color: #b71c1c;
+        }
+
+        /* ========== MODAL ========== */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transicion);
+            padding: 20px;
+        }
+        .modal-backdrop.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal {
+            background: #fff;
+            border-radius: var(--radio);
+            width: 100%;
+            max-width: 520px;
+            box-shadow: var(--sombra-lg);
+            animation: modalIn 0.3s ease;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+        @keyframes modalIn {
+            from {
+                transform: translateY(20px) scale(0.96);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--gris-borde);
+        }
+        .modal-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .btn-cerrar-modal {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--gris-texto);
+            padding: 4px 8px;
+            border-radius: 50%;
+            transition: all var(--transicion);
+        }
+        .btn-cerrar-modal:hover {
+            background: var(--gris-fondo);
+            color: var(--negro);
+        }
+        .modal-body {
+            padding: 20px 22px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .modal-body .form-grupo {
+            margin-bottom: 16px;
+        }
+        .modal-body label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.82rem;
+            margin-bottom: 5px;
+            color: var(--negro-suave);
+            letter-spacing: -0.1px;
+        }
+        .modal-body input,
+        .modal-body select,
+        .modal-body textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--gris-borde);
+            border-radius: var(--radio-sm);
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border var(--transicion), box-shadow var(--transicion);
+            background: #fafafa;
+            color: var(--negro);
+        }
+        .modal-body input:focus,
+        .modal-body select:focus,
+        .modal-body textarea:focus {
+            outline: none;
+            border-color: var(--naranja);
+            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.08);
+            background: #fff;
+        }
+        .modal-body textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 16px 22px;
+            border-top: 1px solid var(--gris-borde);
+        }
+        .checkbox-grupo {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gris-fondo);
+            padding: 7px 12px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: background var(--transicion);
+        }
+        .checkbox-item:hover {
+            background: #ebebeb;
+        }
+        .checkbox-item input {
+            width: auto;
+            accent-color: var(--naranja);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .contenido {
+                padding: 18px 16px 30px;
+            }
+            .topbar {
+                padding: 12px 16px;
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.abierto {
+                transform: translateX(0);
+            }
+            .sidebar-overlay.visible {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            .main-wrapper {
+                margin-left: 0 !important;
+            }
+            .btn-hamburguesa {
+                display: block;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .stat-card {
+                padding: 14px 16px;
+                gap: 10px;
+            }
+            .stat-card .stat-icono {
+                width: 38px;
+                height: 38px;
+                font-size: 1.1rem;
+            }
+            .stat-info .stat-valor {
+                font-size: 1.3rem;
+            }
+            .contenido {
+                padding: 14px 10px 24px;
+            }
+            .topbar {
+                padding: 10px 12px;
+                gap: 10px;
+            }
+            .topbar-titulo {
+                font-size: 1rem;
+            }
+            .modal {
+                max-width: 95vw;
+                max-height: 90vh;
+            }
+            .panel-header {
+                padding: 12px 14px;
+            }
+            .panel-header h2 {
+                font-size: 0.95rem;
+            }
+            .btn {
+                padding: 8px 14px;
+                font-size: 0.78rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .topbar-der .icono-btn {
+                font-size: 1rem;
+            }
+            .avatar-top {
+                width: 30px;
+                height: 30px;
+                font-size: 0.75rem;
+            }
+            table {
+                font-size: 0.75rem;
+                min-width: 450px;
+            }
+            table thead th,
+            table tbody td {
+                padding: 8px 10px;
+            }
+            .badge {
+                font-size: 0.68rem;
+                padding: 4px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== OVERLAY MÓVIL ==================== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icono">🍔</div>
+            <div class="logo-texto">BurgerKing<span>Admin Panel</span></div>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a data-modulo="dashboard" class="activo" onclick="cambiarModulo('dashboard')">
+                    <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a></li>
+            <li><a data-modulo="usuarios" onclick="cambiarModulo('usuarios')">
+                    <i class="fa-solid fa-users"></i> Usuarios
+            </a></li>
+            <li><a data-modulo="mesas" onclick="cambiarModulo('mesas')">
+                    <i class="fa-solid fa-chair"></i> Mesas
+            </a></li>
+            <li><a data-modulo="pedidos" onclick="cambiarModulo('pedidos')">
+                    <i class="fa-solid fa-clipboard-list"></i> Pedidos
+            </a></li>
+            <li><a data-modulo="ventas" onclick="cambiarModulo('ventas')">
+                    <i class="fa-solid fa-receipt"></i> Ventas
+            </a></li>
+            <li><a data-modulo="roles" onclick="cambiarModulo('roles')">
+                    <i class="fa-solid fa-user-tag"></i> Roles
+            </a></li>
+            <li><a data-modulo="permisos" onclick="cambiarModulo('permisos')">
+                    <i class="fa-solid fa-shield-halved"></i> Permisos
+            </a></li>
+        </ul>
+        <div class="sidebar-footer">v1.0 &copy; 2026</div>
+    </aside>
+
+    <!-- ==================== CONTENEDOR PRINCIPAL ==================== -->
+    <div class="main-wrapper" id="mainWrapper">
+        <!-- TOP BAR -->
+        <header class="topbar">
+            <div class="topbar-izq">
+                <button class="btn-hamburguesa" id="btnHamburguesa" aria-label="Menú">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <span class="topbar-titulo">Módulo: <strong class="modulo-nombre" id="moduloNombre">Dashboard</strong></span>
+            </div>
+            <div class="topbar-der">
+                <button class="icono-btn" title="Buscar"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button class="icono-btn" title="Notificaciones">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="badge-punto"></span>
+                </button>
+                <div class="avatar-top" title="Admin">CM</div>
+            </div>
+        </header>
+
+        <!-- CONTENIDO DINÁMICO -->
+        <div class="contenido" id="contenidoDinamico">
+            <!-- Se llena con JS -->
+        </div>
+    </div>
+
+    <!-- ==================== MODAL GENÉRICO ==================== -->
+    <div class="modal-backdrop" id="modalBackdrop">
+        <div class="modal" id="modalContenedor">
+            <div class="modal-header">
+                <h3 id="modalTitulo">Título</h3>
+                <button class="btn-cerrar-modal" onclick="cerrarModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <!-- Botones dinámicos -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ========== DATOS DE EJEMPLO (1-2 registros por módulo) ==========
+            const datos = {
+                usuarios: [
+                    { id: 1, nombre: 'Carlos Mendoza', email: 'admin@burgerking.com', rol: 'Administrador',
+                        estado: 'activo' },
+                ],
+                mesas: [
+                    { id: 1, numero: 'Mesa 1', capacidad: 4, estado: 'disponible' },
+                    { id: 2, numero: 'Mesa 2', capacidad: 2, estado: 'ocupada' },
+                ],
+                pedidos: [
+                    { id: 1001, mesa: 'Mesa 2', items: 3, total: '$285.00', estado: 'en_preparacion',
+                    fecha: '2026-06-21 14:30' },
+                ],
+                ventas: [
+                    { id: 5001, pedido_ref: '#1001', fecha: '2026-06-21 15:10', total: '$285.00',
+                        metodo_pago: 'Efectivo', estado: 'completada' },
+                ],
+                roles: [
+                    { id: 1, nombre: 'Administrador', permisos: [1, 2, 3, 4, 5, 6] },
+                    { id: 2, nombre: 'Empleado', permisos: [4, 5, 6] },
+                ],
+                permisos: [
+                    { id: 1, nombre: 'crear_usuarios', descripcion: 'Crear nuevos usuarios en el sistema' },
+                    { id: 2, nombre: 'editar_usuarios', descripcion: 'Modificar datos de usuarios existentes' },
+                    { id: 3, nombre: 'eliminar_usuarios', descripcion: 'Eliminar usuarios del sistema' },
+                    { id: 4, nombre: 'ver_reportes', descripcion: 'Acceder a reportes y estadísticas' },
+                    { id: 5, nombre: 'gestionar_pedidos', descripcion: 'Crear, editar y cancelar pedidos' },
+                    { id: 6, nombre: 'gestionar_mesas', descripcion: 'Administrar el estado de las mesas' },
+                ],
+            };
+
+            let moduloActual = 'dashboard';
+            let modalCallback = null; // Para guardar la función del botón principal del modal
+
+            // ========== REFERENCIAS DOM ==========
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const btnHamburguesa = document.getElementById('btnHamburguesa');
+            const mainWrapper = document.getElementById('mainWrapper');
+            const moduloNombre = document.getElementById('moduloNombre');
+            const contenidoDinamico = document.getElementById('contenidoDinamico');
+            const modalBackdrop = document.getElementById('modalBackdrop');
+            const modalTitulo = document.getElementById('modalTitulo');
+            const modalBody = document.getElementById('modalBody');
+            const modalFooter = document.getElementById('modalFooter');
+
+            // ========== NAVEGACIÓN ==========
+            function cambiarModulo(modulo) {
+                moduloActual = modulo;
+                // Actualizar sidebar
+                document.querySelectorAll('.sidebar-nav li a').forEach(a => a.classList.remove('activo'));
+                const link = document.querySelector(`.sidebar-nav li a[data-modulo="${modulo}"]`);
+                if (link) link.classList.add('activo');
+                // Actualizar título
+                const nombres = {
+                    dashboard: 'Dashboard',
+                    usuarios: 'Usuarios',
+                    mesas: 'Mesas',
+                    pedidos: 'Pedidos',
+                    ventas: 'Ventas',
+                    roles: 'Roles',
+                    permisos: 'Permisos'
+                };
+                moduloNombre.textContent = nombres[modulo] || modulo;
+                // Renderizar
+                renderizarModulo(modulo);
+                // Cerrar sidebar en móvil
+                cerrarSidebar();
+            }
+
+            function cerrarSidebar() {
+                sidebar.classList.remove('abierto');
+                sidebarOverlay.classList.remove('visible');
+            }
+
+            function abrirSidebar() {
+                sidebar.classList.add('abierto');
+                sidebarOverlay.classList.add('visible');
+            }
+
+            btnHamburguesa.addEventListener('click', () => {
+                if (sidebar.classList.contains('abierto')) {
+                    cerrarSidebar();
+                } else {
+                    abrirSidebar();
+                }
+            });
+            sidebarOverlay.addEventListener('click', cerrarSidebar);
+
+            // ========== RENDERIZADO DE MÓDULOS ==========
+            function renderizarModulo(modulo) {
+                let html = '';
+                switch (modulo) {
+                    case 'dashboard':
+                        html = renderizarDashboard();
+                        break;
+                    case 'usuarios':
+                        html = renderizarTablaGenerica('usuarios', 'Usuarios', ['ID', 'Nombre', 'Email', 'Rol',
+                            'Estado', 'Acciones'
+                        ], datos.usuarios, 'usuario');
+                        break;
+                    case 'mesas':
+                        html = renderizarTablaGenerica('mesas', 'Mesas', ['ID', 'Número', 'Capacidad', 'Estado',
+                            'Acciones'
+                        ], datos.mesas, 'mesa');
+                        break;
+                    case 'pedidos':
+                        html = renderizarTablaGenerica('pedidos', 'Pedidos', ['ID', 'Mesa', 'Items', 'Total',
+                            'Estado', 'Fecha', 'Acciones'
+                        ], datos.pedidos, 'pedido');
+                        break;
+                    case 'ventas':
+                        html = renderizarTablaGenerica('ventas', 'Ventas', ['ID', 'Pedido Ref.', 'Fecha', 'Total',
+                            'Método de Pago', 'Estado', 'Acciones'
+                        ], datos.ventas, 'venta');
+                        break;
+                    case 'roles':
+                        html = renderizarRoles();
+                        break;
+                    case 'permisos':
+                        html = renderizarTablaGenerica('permisos', 'Permisos', ['ID', 'Nombre', 'Descripción',
+                            'Acciones'
+                        ], datos.permisos, 'permiso');
+                        break;
+                    default:
+                        html = renderizarDashboard();
+                }
+                contenidoDinamico.innerHTML = html;
+            }
+
+            function renderizarDashboard() {
+                const totalUsuarios = datos.usuarios.length;
+                const mesasOcupadas = datos.mesas.filter(m => m.estado === 'ocupada').length;
+                const totalMesas = datos.mesas.length;
+                const pedidosActivos = datos.pedidos.filter(p => p.estado !== 'completado' && p.estado !== 'cancelado')
+                    .length;
+                const ventasHoy = datos.ventas.length;
+
+                return `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icono naranja"><i class="fa-solid fa-users"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-valor">${totalUsuarios}</div>
+                            <div class="stat-label">Usuarios registrados</div>
+                        </div>
+                        <div class="stat-barra-deco"></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icono negro"><i class="fa-solid fa-chair"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-valor">${mesasOcupadas}/${totalMesas}</div>
+                            <div class="stat-label">Mesas ocupadas</div>
+                        </div>
+                        <div class="stat-barra-deco"></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icono naranja"><i class="fa-solid fa-clipboard-list"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-valor">${pedidosActivos}</div>
+                            <div class="stat-label">Pedidos activos</div>
+                        </div>
+                        <div class="stat-barra-deco"></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icono negro"><i class="fa-solid fa-receipt"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-valor">${ventasHoy}</div>
+                            <div class="stat-label">Ventas de hoy</div>
+                        </div>
+                        <div class="stat-barra-deco"></div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>📋 Actividad reciente</h2>
+                    </div>
+                    <div class="tabla-contenedor">
+                        <table>
+                            <thead>
+                                <tr><th>Tipo</th><th>Detalle</th><th>Fecha</th><th>Estado</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge badge-info">Pedido</span></td>
+                                    <td>Pedido #1001 — Mesa 2 — $285.00</td>
+                                    <td>2026-06-21 14:30</td>
+                                    <td><span class="badge badge-advertencia">En preparación</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge badge-exito">Venta</span></td>
+                                    <td>Venta #5001 — Efectivo — $285.00</td>
+                                    <td>2026-06-21 15:10</td>
+                                    <td><span class="badge badge-exito">Completada</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`;
+            }
+
+            function renderizarTablaGenerica(moduloKey, titulo, columnas, registros, singular) {
+                const filas = registros.length === 0 ?
+                    `<tr><td colspan="${columnas.length}" style="text-align:center;padding:30px;color:#999;">No hay ${singular}s registrados aún. Haz clic en <strong>"Nuevo ${singular}"</strong> para agregar uno.</td></tr>` :
+                    registros.map(r => {
+                        let celdas = '';
+                        columnas.forEach(col => {
+                            const key = col.toLowerCase().replace(/[^a-záéíóúñ]/g, '_').replace(/__+/g, '_')
+                                .replace(/_+$/, '');
+                            // Mapeo de claves
+                            const keyMap = {
+                                'id': 'id',
+                                'nombre': 'nombre',
+                                'email': 'email',
+                                'rol': 'rol',
+                                'estado': 'estado',
+                                'número': 'numero',
+                                'capacidad': 'capacidad',
+                                'mesa': 'mesa',
+                                'items': 'items',
+                                'total': 'total',
+                                'fecha': 'fecha',
+                                'pedido_ref': 'pedido_ref',
+                                'método_de_pago': 'metodo_pago',
+                                'descripción': 'descripcion',
+                                'acciones': 'acciones',
+                            };
+                            const dataKey = keyMap[key] || key;
+                            if (col === 'Acciones') {
+                                celdas +=
+                                    `<td style="display:flex;gap:6px;flex-wrap:wrap;">${botonesAccion(moduloKey, r)}</td>`;
+                            } else if (col === 'Estado') {
+                                celdas += `<td>${badgeEstado(r.estado)}</td>`;
+                            } else if (col === 'Rol') {
+                                celdas += `<td>${r.rol || '—'}</td>`;
+                            } else {
+                                celdas += `<td>${r[dataKey] !== undefined ? r[dataKey] : '—'}</td>`;
+                            }
+                        });
+                        return `<tr>${celdas}</tr>`;
+                    }).join('');
+
+                return `
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>📋 ${titulo}</h2>
+                        <button class="btn btn-primario" onclick="abrirModalNuevo('${moduloKey}')">
+                            <i class="fa-solid fa-plus"></i> Nuevo ${singular}
+                        </button>
+                    </div>
+                    <div class="tabla-contenedor">
+                        <table>
+                            <thead><tr>${columnas.map(c => `<th>${c}</th>`).join('')}</tr></thead>
+                            <tbody>${filas}</tbody>
+                        </table>
+                    </div>
+                </div>`;
+            }
+
+            function renderizarRoles() {
+                const filas = datos.roles.length === 0 ?
+                    `<tr><td colspan="4" style="text-align:center;padding:30px;color:#999;">No hay roles registrados aún.</td></tr>` :
+                    datos.roles.map(r => {
+                        const nombresPermisos = r.permisos
+                            .map(pid => datos.permisos.find(p => p.id === pid))
+                            .filter(Boolean)
+                            .map(p => p.nombre.replace(/_/g, ' '))
+                            .join(', ');
+                        return `
+                        <tr>
+                            <td>${r.id}</td>
+                            <td><strong>${r.nombre}</strong></td>
+                            <td style="font-size:0.8rem;color:#555;">${nombresPermisos || '—'}</td>
+                            <td style="display:flex;gap:6px;flex-wrap:wrap;">${botonesAccion('roles', r)}</td>
+                        </tr>`;
+                    }).join('');
+
+                return `
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>🔐 Roles</h2>
+                        <button class="btn btn-primario" onclick="abrirModalNuevo('roles')">
+                            <i class="fa-solid fa-plus"></i> Nuevo rol
+                        </button>
+                    </div>
+                    <div class="tabla-contenedor">
+                        <table>
+                            <thead><tr><th>ID</th><th>Nombre</th><th>Permisos asignados</th><th>Acciones</th></tr></thead>
+                            <tbody>${filas}</tbody>
+                        </table>
+                    </div>
+                </div>`;
+            }
+
+            function botonesAccion(moduloKey, registro) {
+                return `
+                <button class="btn btn-ghost btn-xs" onclick="abrirModalEditar('${moduloKey}', ${registro.id})" title="Editar">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class="btn btn-ghost btn-xs btn-peligro" onclick="eliminarRegistro('${moduloKey}', ${registro.id})" title="Eliminar">
+                    <i class="fa-solid fa-trash"></i>
+                </button>`;
+            }
+
+            function badgeEstado(estado) {
+                const map = {
+                    'activo': 'badge-exito',
+                    'inactivo': 'badge-peligro',
+                    'disponible': 'badge-exito',
+                    'ocupada': 'badge-advertencia',
+                    'en_preparacion': 'badge-advertencia',
+                    'completado': 'badge-exito',
+                    'completada': 'badge-exito',
+                    'cancelado': 'badge-peligro',
+                    'pendiente': 'badge-info',
+                    'entregado': 'badge-exito',
+                };
+                const clase = map[estado] || 'badge-neutro';
+                const texto = estado.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                return `<span class="badge ${clase}">${texto}</span>`;
+            }
+
+            // ========== MODAL ==========
+            function abrirModal(titulo, bodyHTML, footerHTML, callback) {
+                modalTitulo.textContent = titulo;
+                modalBody.innerHTML = bodyHTML;
+                modalFooter.innerHTML = footerHTML;
+                modalCallback = callback;
+                modalBackdrop.classList.add('visible');
+            }
+
+            function cerrarModal() {
+                modalBackdrop.classList.remove('visible');
+                modalCallback = null;
+            }
+            modalBackdrop.addEventListener('click', function(e) {
+                if (e.target === modalBackdrop) cerrarModal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') cerrarModal();
+            });
+
+            // ========== ABRIR MODAL NUEVO ==========
+            function abrirModalNuevo(moduloKey) {
+                let bodyHTML = '';
+                let titulo = '';
+                const footerHTML = `
+                <button class="btn btn-outline" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn btn-primario" id="btnGuardarModal">Guardar</button>`;
+
+                switch (moduloKey) {
+                    case 'usuarios':
+                        titulo = 'Nuevo Usuario';
+                        bodyHTML = `
+                        <div class="form-grupo"><label>Nombre completo</label><input type="text" id="formNombre" placeholder="Ej: Ana López"></div>
+                        <div class="form-grupo"><label>Email</label><input type="email" id="formEmail" placeholder="ana@burgerking.com"></div>
+                        <div class="form-grupo"><label>Rol</label><select id="formRol">
+                            ${datos.roles.map(r => `<option value="${r.nombre}">${r.nombre}</option>`).join('')}
+                        </select></div>
+                        <div class="form-grupo"><label>Estado</label><select id="formEstado">
+                            <option value="activo">Activo</option><option value="inactivo">Inactivo</option>
+                        </select></div>`;
+                        break;
+                    case 'mesas':
+                        titulo = 'Nueva Mesa';
+                        bodyHTML = `
+                        <div class="form-grupo"><label>Número / Nombre</label><input type="text" id="formNumero" placeholder="Ej: Mesa 3"></div>
+                        <div class="form-grupo"><label>Capacidad</label><input type="number" id="formCapacidad" placeholder="Ej: 4" min="1" max="20"></div>
+                        <div class="form-grupo"><label>Estado</label><select id="formEstado">
+                            <option value="disponible">Disponible</option><option value="ocupada">Ocupada</option>
+                        </select></div>`;
+                        break;
+                    case 'pedidos':
+                        titulo = 'Nuevo Pedido';
+                        bodyHTML = `
+                        <div class="form-grupo"><label>Mesa</label><select id="formMesa">
+                            ${datos.mesas.map(m => `<option value="${m.numero}">${m.numero} (Cap: ${m.capacidad})</option>`).join('')}
+                        </select></div>
+                        <div class="form-grupo"><label>Cantidad de items</label><input type="number" id="formItems" placeholder="Ej: 3" min="1"></div>
+                        <div class="form-grupo"><label>Total</label><input type="text" id="formTotal" placeholder="Ej: $320.00"></div>
+                        <div class="form-grupo"><label>Estado</label><select id="formEstado">
+                            <option value="pendiente">Pendiente</option><option value="en_preparacion">En preparación</option>
+                            <option value="entregado">Entregado</option><option value="cancelado">Cancelado</option>
+                        </select></div>`;
+                        break;
+                    case 'ventas':
+                        titulo = 'Nueva Venta';
+                        bodyHTML = `
+                        <div class="form-grupo"><label>Referencia de Pedido</label><input type="text" id="formPedidoRef" placeholder="Ej: #1002"></div>
+                        <div class="form-grupo"><label>Total</label><input type="text" id="formTotal" placeholder="Ej: $450.00"></div>
+                        <div class="form-grupo"><label>Método de pago</label><select id="formMetodoPago">
+                            <option value="Efectivo">Efectivo</option><option value="Tarjeta">Tarjeta</option>
+                            <option value="Transferencia">Transferencia</option>
+                        </select></div>
+                        <div class="form-grupo"><label>Estado</label><select id="formEstado">
+                            <option value="completada">Completada</option><option value="reembolsada">Reembolsada</option>
+                        </select></div>`;
+                        break;
+                    case 'roles':
+                        titulo = 'Nuevo Rol';
+                        bodyHTML = `
+                        <div class="form-grupo"><label>Nombre del rol</label><input type="text" id="formNombreRol" placeholder="Ej: Supervisor"></div>
+                        <div class="form-grupo"><label>Permisos asignados</label>
+                            <div class="checkbox-grupo">
+                                ${datos.permisos.map(p => `
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" value="${p.id}" class="check-permiso"> ${p.nombre.replace(/_/g, ' ')}
+                                    </label>`).join('')}
+                            </div>
+                        </div>`;
+                        break;
+                    case 'permisos':
+                        titulo = 'Nuevo Permiso';
+                        bodyHTML = `
+                        <div class="form-grupo"><label>Nombre del permiso</label><input type="text" id="formNombrePermiso" placeholder="Ej: exportar_reportes"></div>
+                        <div class="form-grupo"><label>Descripción</label><textarea id="formDescPermiso" placeholder="Describe qué permite este permiso..."></textarea></div>`;
+                        break;
+                    default:
+                        titulo = 'Nuevo registro';
+                        bodyHTML = '<p>Formulario no definido.</p>';
+                }
+
+                abrirModal(titulo, bodyHTML, footerHTML, function() {
+                    // Callback al guardar
+                    guardarNuevo(moduloKey);
+                });
+
+                // Asignar evento al botón guardar
+                setTimeout(() => {
+                    const btnGuardar = document.getElementById('btnGuardarModal');
+                    if (btnGuardar) {
+                        btnGuardar.addEventListener('click', function() {
+                            if (modalCallback) modalCallback();
+                        });
+                    }
+                }, 100);
+            }
+
+            function guardarNuevo(moduloKey) {
+                const ahora = new Date().toISOString().slice(0, 16).replace('T', ' ');
+                let nuevoRegistro = {};
+                let nuevoId = 1;
+
+                switch (moduloKey) {
+                    case 'usuarios':
+                        const nombre = document.getElementById('formNombre')?.value.trim();
+                        const email = document.getElementById('formEmail')?.value.trim();
+                        const rol = document.getElementById('formRol')?.value;
+                        const estadoU = document.getElementById('formEstado')?.value;
+                        if (!nombre || !email) { alert('Completa nombre y email.'); return; }
+                        nuevoId = Math.max(...datos.usuarios.map(u => u.id), 0) + 1;
+                        nuevoRegistro = { id: nuevoId, nombre, email, rol, estado: estadoU };
+                        datos.usuarios.push(nuevoRegistro);
+                        break;
+                    case 'mesas':
+                        const numero = document.getElementById('formNumero')?.value.trim();
+                        const capacidad = parseInt(document.getElementById('formCapacidad')?.value) || 4;
+                        const estadoM = document.getElementById('formEstado')?.value;
+                        if (!numero) { alert('Ingresa el número de mesa.'); return; }
+                        nuevoId = Math.max(...datos.mesas.map(m => m.id), 0) + 1;
+                        nuevoRegistro = { id: nuevoId, numero, capacidad, estado: estadoM };
+                        datos.mesas.push(nuevoRegistro);
+                        break;
+                    case 'pedidos':
+                        const mesaP = document.getElementById('formMesa')?.value;
+                        const itemsP = parseInt(document.getElementById('formItems')?.value) || 1;
+                        const totalP = document.getElementById('formTotal')?.value.trim() || '$0.00';
+                        const estadoP = document.getElementById('formEstado')?.value;
+                        if (!mesaP) { alert('Selecciona una mesa.'); return; }
+                        nuevoId = Math.max(...datos.pedidos.map(p => p.id), 1000) + 1;
+                        nuevoRegistro = { id: nuevoId, mesa: mesaP, items: itemsP, total: totalP, estado: estadoP,
+                            fecha: ahora };
+                        datos.pedidos.push(nuevoRegistro);
+                        break;
+                    case 'ventas':
+                        const ref = document.getElementById('formPedidoRef')?.value.trim() || '#—';
+                        const totalV = document.getElementById('formTotal')?.value.trim() || '$0.00';
+                        const metodo = document.getElementById('formMetodoPago')?.value;
+                        const estadoV = document.getElementById('formEstado')?.value;
+                        nuevoId = Math.max(...datos.ventas.map(v => v.id), 5000) + 1;
+                        nuevoRegistro = { id: nuevoId, pedido_ref: ref, fecha: ahora, total: totalV, metodo_pago: metodo,
+                            estado: estadoV };
+                        datos.ventas.push(nuevoRegistro);
+                        break;
+                    case 'roles':
+                        const nombreR = document.getElementById('formNombreRol')?.value.trim();
+                        if (!nombreR) { alert('Ingresa el nombre del rol.'); return; }
+                        const checks = document.querySelectorAll('.check-permiso:checked');
+                        const permisosIds = Array.from(checks).map(c => parseInt(c.value));
+                        nuevoId = Math.max(...datos.roles.map(r => r.id), 0) + 1;
+                        nuevoRegistro = { id: nuevoId, nombre: nombreR, permisos: permisosIds };
+                        datos.roles.push(nuevoRegistro);
+                        break;
+                    case 'permisos':
+                        const nombrePerm = document.getElementById('formNombrePermiso')?.value.trim();
+                        const descPerm = document.getElementById('formDescPermiso')?.value.trim();
+                        if (!nombrePerm) { alert('Ingresa el nombre del permiso.'); return; }
+                        nuevoId = Math.max(...datos.permisos.map(p => p.id), 0) + 1;
+                        nuevoRegistro = { id: nuevoId, nombre: nombrePerm, descripcion: descPerm };
+                        datos.permisos.push(nuevoRegistro);
+                        break;
+                }
+                cerrarModal();
+                renderizarModulo(moduloActual);
+            }
+
+            // ========== ABRIR MODAL EDITAR ==========
+            function abrirModalEditar(moduloKey, id) {
+                let registro = null;
+                let bodyHTML = '';
+                let titulo = 'Editar registro';
+                const footerHTML = `
+                <button class="btn btn-outline" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn btn-primario" id="btnGuardarModal">Actualizar</button>`;
+
+                switch (moduloKey) {
+                    case 'usuarios':
+                        registro = datos.usuarios.find(r => r.id === id);
+                        if (!registro) return;
+                        titulo = 'Editar Usuario';
+                        bodyHTML = `
+                        <div class="form-grupo"><label>Nombre completo</label><input type="text" id="formNombre" value="${registro.nombre}"></div>
+                        <div class="form-grupo"><label>Email</label><input type="email" id="formEmail" value="${registro.email}"></div>
+                        <div class="form-grupo"><label>Rol</label><select id="formRol">
+                            ${datos.roles.map(r => `<option value="${r.nombre}" ${r.nombre === registro.rol ? 'selected' : ''}>${r.nombre}</option>`).join('')}
+                        </select></div>
+                        <div class="form-grupo"><label>Estado</label><select id="formEstado">
+                            <option value="activo" ${registro.estado === 'activo' ? 'selected' : ''}>Activo</option>
+                            <option value="inactivo" ${registro.estado === 'inactivo' ? 'selected' : ''}>Inactivo</option>
+                        </select></div>`;
+                        break;
+                    case 'mesas':
+                        registro = datos.mesas.find(r => r.id === id);
+                        if (!registro) return;
+                        titulo = 'Editar Mesa';
+                        bodyHTML = `
+                        <div class="form-grupo"><label>Número / Nombre</label><input type="text" id="formNumero" value="${registro.numero}"></div>
+                        <div class="form-grupo"><label>Capacidad</label><input type="number" id="formCapacidad" value="${registro.capacidad}" min="1" max="20"></div>
+                        <div class="form-grupo"><label>Estado</label><select id="formEstado">
+                            <option value="disponible" ${registro.estado === 'disponible' ? 'selected' : ''}>Disponible</option>
+                            <option value="ocupada" ${registro.estado === 'ocupada' ? 'selected' : ''}>Ocupada</option>
+                        </select></div>`;
+                        break;
+                    case 'pedidos':
+                        registro = datos.pedidos.find(r => r.id === id);
+                        if (!registro) return;
+                        titulo = 'Editar Pedido';
+                        bodyHTML = `
+                        <div class="form-grupo"><label>Mesa</label><select id="formMesa">
+                            ${datos.mesas.map(m => `<option value="${m.numero}" ${m.numero === registro.mesa ? 'selected' : ''}>${m.numero}</option>`).join('')}
+                        </select></div>
+                        <div class="form-grupo"><label>Cantidad de items</label><input type="number" id="formItems" value="${registro.items}" min="1"></div>
+                        <div class="form-grupo"><label>Total</label><input type="text" id="formTotal" value="${registro.total}"></div>
+                        <div class="form-grupo"><label>Estado</label><select id="formEstado">
+                            ${['pendiente','en_preparacion','entregado','cancelado'].map(e => `<option value="${e}" ${registro.estado === e ? 'selected' : ''}>${e.replace(/_/g, ' ')}</option>`).join('')}
+                        </select></div>`;
+                        break;
+                    case 'ventas':
+                        registro = datos.ventas.find(r => r.id === id);
+                        if (!registro) return;
+                        titulo = 'Editar Venta';
+                        bodyHTML = `
+                        <div class="form-grupo"><label>Referencia de Pedido</label><input type="text" id="formPedidoRef" value="${registro.pedido_ref}"></div>
+                        <div class="form-grupo"><label>Total</label><input type="text" id="formTotal" value="${registro.total}"></div>
+                        <div class="form-grupo"><label>Método de pago</label><select id="formMetodoPago">
+                            ${['Efectivo','Tarjeta','Transferencia'].map(mp => `<option value="${mp}" ${registro.metodo_pago === mp ? 'selected' : ''}>${mp}</option>`).join('')}
+                        </select></div>
+                        <div class="form-grupo"><label>Estado</label><select id="formEstado">
+                            <option value="completada" ${registro.estado === 'completada' ? 'selected' : ''}>Completada</option>
+                            <option value="reembolsada" ${registro.estado === 'reembolsada' ? 'selected' : ''}>Reembolsada</option>
+                        </select></div>`;
+                        break;
+                    case 'roles':
+                        registro = datos.roles.find(r => r.id === id);
+                        if (!registro) return;
+                        titulo = 'Editar Rol';
+                        bodyHTML = `
+                        <div class="form-grupo"><label>Nombre del rol</label><input type="text" id="formNombreRol" value="${registro.nombre}"></div>
+                        <div class="form-grupo"><label>Permisos asignados</label>
+                            <div class="checkbox-grupo">
+                                ${datos.permisos.map(p => `
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" value="${p.id}" class="check-permiso" ${registro.permisos.includes(p.id) ? 'checked' : ''}> ${p.nombre.replace(/_/g, ' ')}
+                                    </label>`).join('')}
+                            </div>
+                        </div>`;
+                        break;
+                    case 'permisos':
+                        registro = datos.permisos.find(r => r.id === id);
+                        if (!registro) return;
+                        titulo = 'Editar Permiso';
+                        bodyHTML = `
+                        <div class="form-grupo"><label>Nombre del permiso</label><input type="text" id="formNombrePermiso" value="${registro.nombre}"></div>
+                        <div class="form-grupo"><label>Descripción</label><textarea id="formDescPermiso">${registro.descripcion}</textarea></div>`;
+                        break;
+                    default:
+                        return;
+                }
+
+                abrirModal(titulo, bodyHTML, footerHTML, function() {
+                    actualizarRegistro(moduloKey, id);
+                });
+
+                setTimeout(() => {
+                    const btnGuardar = document.getElementById('btnGuardarModal');
+                    if (btnGuardar) {
+                        btnGuardar.addEventListener('click', function() {
+                            if (modalCallback) modalCallback();
+                        });
+                    }
+                }, 100);
+            }
+
+            function actualizarRegistro(moduloKey, id) {
+                let registro = null;
+                switch (moduloKey) {
+                    case 'usuarios':
+                        registro = datos.usuarios.find(r => r.id === id);
+                        if (!registro) return;
+                        registro.nombre = document.getElementById('formNombre')?.value.trim() || registro.nombre;
+                        registro.email = document.getElementById('formEmail')?.value.trim() || registro.email;
+                        registro.rol = document.getElementById('formRol')?.value || registro.rol;
+                        registro.estado = document.getElementById('formEstado')?.value || registro.estado;
+                        break;
+                    case 'mesas':
+                        registro = datos.mesas.find(r => r.id === id);
+                        if (!registro) return;
+                        registro.numero = document.getElementById('formNumero')?.value.trim() || registro.numero;
+                        registro.capacidad = parseInt(document.getElementById('formCapacidad')?.value) || registro
+                            .capacidad;
+                        registro.estado = document.getElementById('formEstado')?.value || registro.estado;
+                        break;
+                    case 'pedidos':
+                        registro = datos.pedidos.find(r => r.id === id);
+                        if (!registro) return;
+                        registro.mesa = document.getElementById('formMesa')?.value || registro.mesa;
+                        registro.items = parseInt(document.getElementById('formItems')?.value) || registro.items;
+                        registro.total = document.getElementById('formTotal')?.value.trim() || registro.total;
+                        registro.estado = document.getElementById('formEstado')?.value || registro.estado;
+                        break;
+                    case 'ventas':
+                        registro = datos.ventas.find(r => r.id === id);
+                        if (!registro) return;
+                        registro.pedido_ref = document.getElementById('formPedidoRef')?.value.trim() || registro
+                            .pedido_ref;
+                        registro.total = document.getElementById('formTotal')?.value.trim() || registro.total;
+                        registro.metodo_pago = document.getElementById('formMetodoPago')?.value || registro
+                            .metodo_pago;
+                        registro.estado = document.getElementById('formEstado')?.value || registro.estado;
+                        break;
+                    case 'roles':
+                        registro = datos.roles.find(r => r.id === id);
+                        if (!registro) return;
+                        registro.nombre = document.getElementById('formNombreRol')?.value.trim() || registro.nombre;
+                        const checks = document.querySelectorAll('.check-permiso:checked');
+                        registro.permisos = Array.from(checks).map(c => parseInt(c.value));
+                        break;
+                    case 'permisos':
+                        registro = datos.permisos.find(r => r.id === id);
+                        if (!registro) return;
+                        registro.nombre = document.getElementById('formNombrePermiso')?.value.trim() || registro.nombre;
+                        registro.descripcion = document.getElementById('formDescPermiso')?.value.trim() || registro
+                            .descripcion;
+                        break;
+                }
+                cerrarModal();
+                renderizarModulo(moduloActual);
+            }
+
+            // ========== ELIMINAR ==========
+            function eliminarRegistro(moduloKey, id) {
+                if (!confirm('¿Estás seguro de eliminar este registro? Esta acción no se puede deshacer.')) return;
+                let arr = null;
+                switch (moduloKey) {
+                    case 'usuarios':
+                        arr = datos.usuarios;
+                        break;
+                    case 'mesas':
+                        arr = datos.mesas;
+                        break;
+                    case 'pedidos':
+                        arr = datos.pedidos;
+                        break;
+                    case 'ventas':
+                        arr = datos.ventas;
+                        break;
+                    case 'roles':
+                        arr = datos.roles;
+                        break;
+                    case 'permisos':
+                        arr = datos.permisos;
+                        break;
+                }
+                if (arr) {
+                    const idx = arr.findIndex(r => r.id === id);
+                    if (idx !== -1) arr.splice(idx, 1);
+                }
+                renderizarModulo(moduloActual);
+            }
+
+            // ========== EXPONER FUNCIONES GLOBALES ==========
+            window.cambiarModulo = cambiarModulo;
+            window.cerrarModal = cerrarModal;
+            window.abrirModalNuevo = abrirModalNuevo;
+            window.abrirModalEditar = abrirModalEditar;
+            window.eliminarRegistro = eliminarRegistro;
+
+            // ========== INICIALIZAR ==========
+            renderizarModulo('dashboard');
+
+            // Cerrar sidebar al presionar Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') cerrarSidebar();
+            });
+
+            console.log('✅ Panel administrativo listo. Paleta: Naranja #FF6B00 | Negro #1A1A1A | Blanco.');
+            console.log('📦 Módulos: Dashboard, Usuarios, Mesas, Pedidos, Ventas, Roles, Permisos.');
+            console.log('📱 Diseño responsive activo. Datos de ejemplo cargados.');
+        })();
+    </script>
+</body>
+</html>

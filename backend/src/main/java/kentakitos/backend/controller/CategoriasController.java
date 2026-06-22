@@ -21,33 +21,33 @@ import kentakitos.backend.service.ICategoriasService;
 
 public class CategoriasController {
     @Autowired
-    private ICategoriasService categoriasService;
+    private ICategoriasService serviCategorias;
 
     @GetMapping("/categorias")
     public List<Categorias> buscarTodos() {
-        return categoriasService.buscarTodos();
+        return serviCategorias.buscarTodos();
     }
 
     @PostMapping("/categorias")
     public Categorias guardar(@RequestBody Categorias categoria) {
-        categoriasService.guardar(categoria);
+        serviCategorias.guardar(categoria);
         return categoria;
     }
 
     @PutMapping("/categorias")
     public Categorias modificar(@RequestBody Categorias categoria) {
-        categoriasService.modificar(categoria);
+        serviCategorias.modificar(categoria);
         return categoria;
     }
 
     @GetMapping("/categorias/{id}")
     public Optional<Categorias> buscarPorId(@PathVariable("id") Integer id) {
-        return categoriasService.buscarId(id);
+        return serviCategorias.buscarPorId(id);
     }
 
     @DeleteMapping("/categorias/{id}")
     public String eliminar(@PathVariable Integer id) {
-        categoriasService.eliminar(id);
+        serviCategorias.eliminar(id);
         return "Eliminado";
     }
 }

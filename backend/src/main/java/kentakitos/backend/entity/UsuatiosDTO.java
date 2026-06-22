@@ -11,20 +11,20 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "roles")
-@SQLDelete(sql = "UPDATE roles SET deleted = 0 WHERE idrol = ?")
+@Table(name = "usuarios")
+@SQLDelete(sql = "UPDATE usuarios SET deleted = 0 WHERE idusuario = ?")
 @Where(clause = "deleted = 1")
 @Data
 
-public class Roles {
+public class UsuatiosDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idrol;
-    private String nombrerol;
+    private Integer idusuario;
+    private String nombre;
+    private String correo;
+    private String username;
+    private String contrasena;
+    private Integer telefono;
+    private String authProvider; // "LOCAL" or "GOOGLE"
     private Integer deleted = 1;
-
-    public Roles() {}
-    public Roles(Integer id) {
-        this.idrol = id;
-    }
 }
