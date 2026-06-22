@@ -34,6 +34,11 @@ public class DetallePedido {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Productos producto;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idpedido")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Pedidos pedido;
+
     public DetallePedido() {}
     public DetallePedido(Integer id) {
         this.iddetallepedido = id;
