@@ -16,7 +16,7 @@ import lombok.Data;
 @Where(clause = "deleted = 1")
 @Data
 
-public class UsuatiosDTO {
+public class UsuariosDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idusuario;

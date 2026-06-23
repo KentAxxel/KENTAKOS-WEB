@@ -61,5 +61,4 @@ public class ClientesController {
         serviClientes.eliminar(id);
         return "Eliminado";
     }
-
 }

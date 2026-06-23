@@ -8,6 +8,6 @@ public interface IUsuariosService {
     List<Usuarios> buscarTodos();
     Usuarios guardar(Usuarios usuario);
     Usuarios modificar(Usuarios usuario);
-    Optional<Usuarios> buscarId(Integer id);
+    Optional<Usuarios> buscarPorId(Integer id);
     void eliminar(Integer id);
 }
