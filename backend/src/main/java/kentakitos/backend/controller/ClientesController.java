@@ -32,7 +32,10 @@ public class ClientesController {
     }
 
     @PostMapping("/clientes")
-    public ResponseEntity<?> guardar(@RequestBody Clientes cliente) {
+    public ResponseEntity<?> guardar(@RequestBody ClientesDTO dto) {
+        Clientes cliente = new Clientes();
+        cliente.setNombre(dto.getNombre());
+        cliente.setCorreo(dto.getCorreo());
         return ResponseEntity.ok(serviClientes.guardar(cliente));
     }
 
