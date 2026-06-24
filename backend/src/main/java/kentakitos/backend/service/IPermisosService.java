@@ -9,6 +9,6 @@ public interface IPermisosService {
     List<Permisos> buscarTodos();
     Permisos guardar(Permisos permiso);
     Permisos modificar(Permisos permiso);
-    Optional<Permisos> buscarId(Integer id);
+    Optional<Permisos> buscarPorId(Integer id);
     void eliminar(Integer id);
 }

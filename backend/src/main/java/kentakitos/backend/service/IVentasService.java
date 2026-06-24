@@ -8,6 +8,6 @@ public interface IVentasService {
     List<Ventas> buscarTodos();
     Ventas guardar(Ventas venta);
     Ventas modificar(Ventas venta);
-    Optional<Ventas> buscarId(Integer id);
+    Optional<Ventas> buscarPorId(Integer id);
     void eliminar(Integer id);
 }

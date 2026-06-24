@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kentakitos.backend.entity.Roles;
+import kentakitos.backend.entity.UsuarioRol;
 import kentakitos.backend.entity.Usuarios;
 import kentakitos.backend.entity.UsuariosDTO;
+import kentakitos.backend.service.IRolesService;
+import kentakitos.backend.service.IUsuarioRolService;
 import kentakitos.backend.service.IUsuariosService;
 
 @RestController
@@ -25,15 +29,43 @@ public class UsuariosController {
     @Autowired
     private IUsuariosService serviUsuarios;
 
+    @Autowired
+    private IRolesService serviRoles;
+
+    @Autowired
+    private IUsuarioRolService serviUsuarioRol;
+
     @GetMapping("/usuarios")
     public List<Usuarios> buscarTodos() {
         return serviUsuarios.buscarTodos();
     }
 
     @PostMapping("/usuarios")
-    public ResponseEntity<?> guardar(@RequestBody Usuarios usuario) {
-        return ResponseEntity.ok(serviUsuarios.guardar(usuario));
-    }
+public ResponseEntity<?> guardar(@RequestBody UsuariosDTO dto) {
+
+    Usuarios usuario = new Usuarios();
+    usuario.setNombre(dto.getNombre());
+    usuario.setCorreo(dto.getCorreo());
+    usuario.setUsername(dto.getUsername());
+    usuario.setContrasena(dto.getContrasena());
+    usuario.setTelefono(dto.getTelefono());
+
+    // Guardar usuario
+    Usuarios nuevo = serviUsuarios.guardar(usuario);
+
+    // Obtener rol INVITADO desde BD (IMPORTANTE)
+    Roles rolInvitado = serviRoles.findByNombreRol("INVITADO");
+
+    UsuarioRol usuarioRol = new UsuarioRol();
+
+    // 🔥 AQUÍ ESTÁ LA CORRECCIÓN
+    usuarioRol.setIdusuario(nuevo);        // no ID, sino entidad
+    usuarioRol.setIdrol(rolInvitado);      // no ID, sino entidad
+
+    serviUsuarioRol.guardar(usuarioRol);
+
+    return ResponseEntity.ok(nuevo);
+}
 
     @PutMapping("/usuarios")
     public ResponseEntity<?> modificar(@RequestBody UsuariosDTO dto) {
@@ -46,7 +78,9 @@ public class UsuariosController {
         usuario.setIdusuario(dto.getIdusuario());
         usuario.setNombre(dto.getNombre());
         usuario.setCorreo(dto.getCorreo());
-
+        usuario.setUsername(dto.getUsername());
+        usuario.setContrasena(dto.getContrasena());
+        usuario.setTelefono(dto.getTelefono());
         return ResponseEntity.ok(serviUsuarios.modificar(usuario));
     }
 

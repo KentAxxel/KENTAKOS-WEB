@@ -13,7 +13,7 @@ import lombok.Data;
 @Entity
 @Table(name = "clientes")
 @SQLDelete(sql = "UPDATE clientes SET deleted = 0 WHERE idcliente = ?")
-@Where(clause = "estado = 1")
+@Where(clause = "deleted = 1")
 @Data
 
 public class Clientes {

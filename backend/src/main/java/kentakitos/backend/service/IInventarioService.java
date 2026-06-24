@@ -8,6 +8,6 @@ public interface IInventarioService {
     List<Inventario> buscarTodos();
     Inventario guardar(Inventario inventario);
     Inventario modificar(Inventario inventario);
-    Optional<Inventario> buscarId(Integer id);
+    Optional<Inventario> buscarPorId(Integer id);
     void eliminar(Integer id);
 }

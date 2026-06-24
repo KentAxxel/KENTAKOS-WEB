@@ -4,11 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import kentakitos.backend.entity.Productos;
 import kentakitos.backend.repository.ProductosRepository;
+import kentakitos.backend.service.IProductosService;
 
-public class ProductosService {
+@Service
+
+public class ProductosService implements IProductosService{
     @Autowired
     private ProductosRepository repoProductos;
 

@@ -9,6 +9,6 @@ public interface IPedidosService {
     List<Pedidos> buscarTodos();
     Pedidos guardar(Pedidos pedido);
     Pedidos modificar(Pedidos pedido);
-    Optional<Pedidos> buscarId(Integer id);
+    Optional<Pedidos> buscarPorId(Integer id);
     void eliminar(Integer id);
 }

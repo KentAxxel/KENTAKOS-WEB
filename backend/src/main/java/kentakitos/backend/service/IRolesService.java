@@ -8,6 +8,7 @@ public interface IRolesService {
     List<Roles> buscarTodos();
     Roles guardar(Roles rol);
     Roles modificar(Roles rol);
-    Optional<Roles> buscarId(Integer id);
+    Optional<Roles> buscarPorId(Integer id);
     void eliminar(Integer id);
+    Roles findByNombreRol(String nombreRol);
 }

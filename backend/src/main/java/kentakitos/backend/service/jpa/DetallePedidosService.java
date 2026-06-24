@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import kentakitos.backend.entity.DetallePedido;
 import kentakitos.backend.repository.DetallePedidoRepository;
 import kentakitos.backend.service.IDetallePedidoService;
+
+@Service
 
 public class DetallePedidosService implements IDetallePedidoService {
     @Autowired

@@ -27,5 +27,4 @@ public class Permisos {
     public Permisos(Integer id){
         this.idpermiso = id;
     }
-
 }

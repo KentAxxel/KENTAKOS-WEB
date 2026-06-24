@@ -8,6 +8,6 @@ public interface IProductosService {
     List<Productos> buscarTodos();
     Productos guardar(Productos producto);
     Productos modificar(Productos producto);
-    Optional<Productos> buscarId(Integer id);
+    Optional<Productos> buscarPorId(Integer id);
     void eliminar(Integer id);
 }

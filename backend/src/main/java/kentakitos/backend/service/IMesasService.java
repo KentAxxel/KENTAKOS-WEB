@@ -8,6 +8,6 @@ public interface IMesasService {
     List<Mesas> buscarTodos();
     Mesas guardar(Mesas mesas);
     Mesas modificar(Mesas mesas);
-    Optional<Mesas> buscarId(Integer id);
+    Optional<Mesas> buscarPorId(Integer id);
     void eliminar(Integer id);
 }

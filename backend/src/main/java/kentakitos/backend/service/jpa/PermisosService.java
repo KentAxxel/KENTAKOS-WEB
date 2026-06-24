@@ -4,11 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import kentakitos.backend.entity.Permisos;
 import kentakitos.backend.repository.PermisosRepository;
+import kentakitos.backend.service.IPermisosService;
 
-public class PermisosService {
+@Service
+
+public class PermisosService implements IPermisosService {
     @Autowired
     private PermisosRepository repoPermisos;
 

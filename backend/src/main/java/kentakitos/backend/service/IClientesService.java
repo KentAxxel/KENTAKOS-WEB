@@ -1,8 +1,8 @@
 package kentakitos.backend.service;
 
-import kentakitos.backend.entity.Clientes;
 import java.util.List;
 import java.util.Optional;
+import kentakitos.backend.entity.Clientes;
 
 public interface IClientesService {
     List<Clientes> buscarTodos();

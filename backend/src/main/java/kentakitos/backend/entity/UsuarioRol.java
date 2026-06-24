@@ -3,8 +3,6 @@ package kentakitos.backend.entity;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -20,20 +18,19 @@ import lombok.Data;
 @SQLDelete(sql = "UPDATE usuario_rol SET deleted = 0 WHERE idusuario_rol = ?")
 @Where(clause = "deleted = 1")
 @Data
-
 public class UsuarioRol {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idusuario_rol;
+
     private Integer deleted = 1;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idusuario")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Usuarios usuario;
+    private Usuarios idusuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idrol")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Roles rol;
+    private Roles idrol;
 }
