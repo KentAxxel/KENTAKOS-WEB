@@ -34,6 +34,7 @@ public class UsuariosService {
         dto.setUsername(usuario.getUsername());
         dto.setEmail(usuario.getCorreo());
         dto.setAuthProvider(usuario.getAuthProvider());
+        dto.setSessionToken(usuario.getSessionToken());
         
         // Determinar estado
         dto.setStatus(usuario.getDeleted() == 1 ? "Activo" : "Inactivo");

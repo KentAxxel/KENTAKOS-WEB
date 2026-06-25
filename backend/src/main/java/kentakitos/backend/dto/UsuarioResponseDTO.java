@@ -13,4 +13,5 @@ public class UsuarioResponseDTO {
     private String avatar;
     private String authProvider;
     private String username;
+    private String sessionToken;
 }

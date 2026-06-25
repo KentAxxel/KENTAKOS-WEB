@@ -16,8 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GoogleAuthService {
@@ -34,6 +37,21 @@ public class GoogleAuthService {
     @Autowired
     private UsuariosService usuariosService;
 
+    private void checkActiveSession(Usuarios usuario) {
+        if (usuario.getSessionToken() != null && usuario.getLastActive() != null) {
+            LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(5);
+            if (usuario.getLastActive().isAfter(fiveMinutesAgo)) {
+                throw new RuntimeException("Ya tienes una sesión activa en otro dispositivo");
+            }
+        }
+    }
+
+    private void startNewSession(Usuarios usuario) {
+        usuario.setSessionToken(UUID.randomUUID().toString());
+        usuario.setLastActive(LocalDateTime.now());
+    }
+
+    @Transactional
     public UsuarioResponseDTO verifyAndSaveUser(String accessToken) {
         // 1. Verificar el token con Google y obtener la información del usuario
         RestTemplate restTemplate = new RestTemplate();
@@ -55,11 +73,15 @@ public class GoogleAuthService {
             String name = (String) payload.get("name");
 
             // 2. Buscar si el usuario ya existe
-            Optional<Usuarios> existingUser = usuariosRepository.findByCorreo(email);
+            Optional<Usuarios> existingUserOpt = usuariosRepository.findByCorreo(email);
 
-            if (existingUser.isPresent()) {
-                // Si existe, lo retornamos (Login exitoso)
-                return usuariosService.convertToDto(existingUser.get());
+            if (existingUserOpt.isPresent()) {
+                Usuarios existingUser = existingUserOpt.get();
+                // Si existe, comprobamos la sesión
+                checkActiveSession(existingUser);
+                startNewSession(existingUser);
+                existingUser = usuariosRepository.save(existingUser);
+                return usuariosService.convertToDto(existingUser);
             } else {
                 boolean isFirstUser = usuariosRepository.count() == 0;
 
@@ -74,6 +96,7 @@ public class GoogleAuthService {
                 newUser.setContrasena("GOOGLE_AUTH"); 
                 newUser.setTelefono(0);
                 
+                startNewSession(newUser);
                 newUser = usuariosRepository.save(newUser);
 
                 if (isFirstUser) {

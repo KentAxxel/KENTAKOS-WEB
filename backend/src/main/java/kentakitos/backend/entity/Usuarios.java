@@ -27,6 +27,8 @@ public class Usuarios {
     private Integer telefono;
     private String authProvider; // "LOCAL" or "GOOGLE"
     private Integer deleted = 1;
+    private String sessionToken;
+    private java.time.LocalDateTime lastActive;
 
     public Usuarios() {}
     public Usuarios(Integer id) {

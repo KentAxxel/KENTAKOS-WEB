@@ -36,7 +36,14 @@ export default function Sidebar() {
   const userString = localStorage.getItem('user');
   const user = userString ? JSON.parse(userString) : null;
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    if (user?.id) {
+      try {
+        await fetch(`http://shop.spring.informaticapp.com:2920/api/auth/logout?userId=${user.id}`, { method: 'POST' });
+      } catch (error) {
+        console.error('Error al cerrar sesión en el servidor:', error);
+      }
+    }
     localStorage.removeItem('user');
   };
 

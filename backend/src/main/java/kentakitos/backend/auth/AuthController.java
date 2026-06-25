@@ -47,4 +47,24 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Error al iniciar sesión: " + e.getMessage());
         }
     }
+
+    @PostMapping("/heartbeat")
+    public ResponseEntity<?> heartbeat(@RequestParam Integer userId, @RequestParam String sessionToken) {
+        try {
+            authService.heartbeat(userId, sessionToken);
+            return ResponseEntity.ok("Heartbeat recibido");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestParam Integer userId) {
+        try {
+            authService.logout(userId);
+            return ResponseEntity.ok("Sesión cerrada");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

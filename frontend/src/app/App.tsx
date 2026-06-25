@@ -37,6 +37,8 @@ function PublicPage() {
   );
 }
 
+import { useEffect } from 'react';
+
 // Admin Layout
 function AdminLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
@@ -47,6 +49,28 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   if (!user) {
     return <Navigate to="/login" replace />;
   }
+
+  // Heartbeat para mantener la sesión viva (cada 1 minuto)
+  useEffect(() => {
+    if (!user || !user.id || !user.sessionToken) return;
+
+    const pingHeartbeat = async () => {
+      try {
+        await fetch(`http://shop.spring.informaticapp.com:2920/api/auth/heartbeat?userId=${user.id}&sessionToken=${user.sessionToken}`, {
+          method: 'POST'
+        });
+      } catch (error) {
+        console.error('Error enviando heartbeat:', error);
+      }
+    };
+
+    // Ping inmediato al entrar
+    pingHeartbeat();
+
+    // Ping cada 60 segundos
+    const interval = setInterval(pingHeartbeat, 60000);
+    return () => clearInterval(interval);
+  }, [user?.id, user?.sessionToken]);
 
   // Si está logueado pero no tiene rol, solo puede ver el Dashboard (que muestra el mensaje de restricción)
   const isRestrictedUser = !user.role || user.role === 'Sin Rol';

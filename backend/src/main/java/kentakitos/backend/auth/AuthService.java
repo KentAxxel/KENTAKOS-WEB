@@ -13,6 +13,8 @@ import kentakitos.backend.service.UsuariosService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.Optional;
 
 @Service
@@ -31,6 +33,20 @@ public class AuthService {
         this.usuariosService = usuariosService;
     }
 
+    private void checkActiveSession(Usuarios usuario) {
+        if (usuario.getSessionToken() != null && usuario.getLastActive() != null) {
+            LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(5);
+            if (usuario.getLastActive().isAfter(fiveMinutesAgo)) {
+                throw new RuntimeException("Ya tienes una sesión activa en otro dispositivo");
+            }
+        }
+    }
+
+    private void startNewSession(Usuarios usuario) {
+        usuario.setSessionToken(UUID.randomUUID().toString());
+        usuario.setLastActive(LocalDateTime.now());
+    }
+
     @Transactional
     public UsuarioResponseDTO registerUser(RegisterRequest request) {
         if (usuariosRepository.findByCorreo(request.getEmail()).isPresent()) {
@@ -46,6 +62,8 @@ public class AuthService {
         newUser.setContrasena(request.getPassword()); // En un proyecto real esto iría encriptado (Bcrypt)
         newUser.setAuthProvider("LOCAL");
         newUser.setTelefono(0);
+        
+        startNewSession(newUser);
 
         newUser = usuariosRepository.save(newUser);
 
@@ -62,6 +80,7 @@ public class AuthService {
         return usuariosService.convertToDto(newUser);
     }
 
+    @Transactional
     public UsuarioResponseDTO loginUser(LoginRequest request) {
         Usuarios usuario = usuariosRepository.findByCorreo(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -70,6 +89,34 @@ public class AuthService {
             throw new RuntimeException("Contraseña incorrecta");
         }
 
+        checkActiveSession(usuario);
+        startNewSession(usuario);
+        
+        usuario = usuariosRepository.save(usuario);
+
         return usuariosService.convertToDto(usuario);
+    }
+
+    @Transactional
+    public void heartbeat(Integer userId, String sessionToken) {
+        Usuarios usuario = usuariosRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (sessionToken != null && sessionToken.equals(usuario.getSessionToken())) {
+            usuario.setLastActive(LocalDateTime.now());
+            usuariosRepository.save(usuario);
+        } else {
+            throw new RuntimeException("Sesión inválida o expirada");
+        }
+    }
+
+    @Transactional
+    public void logout(Integer userId) {
+        Usuarios usuario = usuariosRepository.findById(userId).orElse(null);
+        if (usuario != null) {
+            usuario.setSessionToken(null);
+            usuario.setLastActive(null);
+            usuariosRepository.save(usuario);
+        }
     }
 }

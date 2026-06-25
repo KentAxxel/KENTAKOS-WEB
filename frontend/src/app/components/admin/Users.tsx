@@ -16,14 +16,14 @@ export default function Users() {
   }, []);
 
   const fetchUsers = () => {
-    fetch('http://localhost:8080/api/usuarios')
+    fetch('http://shop.spring.informaticapp.com:2920/api/usuarios')
       .then((res) => res.json())
       .then((data) => setUsers(data))
       .catch((error) => console.error('Error fetching users:', error));
   };
 
   const fetchRoles = () => {
-    fetch('http://localhost:8080/api/admin/roles')
+    fetch('http://shop.spring.informaticapp.com:2920/api/admin/roles')
       .then((res) => res.json())
       .then((data) => setRoles(data))
       .catch((error) => console.error('Error fetching roles:', error));
@@ -32,7 +32,7 @@ export default function Users() {
   const handleDelete = async (id: number) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
       try {
-        const response = await fetch(`http://localhost:8080/api/usuarios/${id}`, {
+        const response = await fetch(`http://shop.spring.informaticapp.com:2920/api/usuarios/${id}`, {
           method: 'DELETE',
         });
         if (response.ok) {
@@ -60,7 +60,7 @@ export default function Users() {
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:8080/api/usuarios/${editingUser.id}`, {
+      const response = await fetch(`http://shop.spring.informaticapp.com:2920/api/usuarios/${editingUser.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
