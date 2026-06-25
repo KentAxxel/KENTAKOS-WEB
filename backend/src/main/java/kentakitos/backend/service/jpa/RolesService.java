@@ -36,8 +36,7 @@ public class RolesService implements IRolesService {
         repoRoles.deleteById(id);
     }
 
-    @Override
     public Roles findByNombreRol(String nombreRol) {
-        return repoRoles.findByNombrerol(nombreRol);
-    }
+    return repoRoles.findByNombrerol(nombreRol);
+}
 }
