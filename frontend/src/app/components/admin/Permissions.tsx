@@ -25,7 +25,8 @@ export default function Permissions() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch('http://shop.spring.informaticapp.com:2920/api/admin/permissions');
+      // const response = await fetch('http://shop.spring.informaticapp.com:2920/api/admin/permissions');
+      const response = await fetch('http://localhost:8080/api/admin/permissions');
       
       if (!response.ok) {
         throw new Error('Error al cargar la matriz de permisos');
@@ -41,7 +42,32 @@ export default function Permissions() {
     }
   };
 
-  if (loading) {
+  const handleToggle = async (modulo: string, rol: string, currentValue: boolean) => {
+    try {
+      const response = await fetch('http://localhost:8080/api/admin/permissions/toggle', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          moduloName: modulo,
+          rolName: rol,
+          conceder: !currentValue
+        })
+      });
+
+      if (response.ok) {
+        cargarMatriz();
+      } else {
+        alert('Error al actualizar el permiso');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error de red al actualizar el permiso');
+    }
+  };
+
+  if (loading && !data) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh]">
         <Loader2 className="w-12 h-12 text-[#F77F00] animate-spin mb-4" />
@@ -91,21 +117,28 @@ export default function Permissions() {
               {data.modulos.map((module, index) => (
                 <tr key={module} className={`hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
                   <td className="px-6 py-4 font-medium text-[#111111]">{module}</td>
-                  {data.roles.map((role) => (
-                    <td key={`${module}-${role}`} className="px-6 py-4 text-center">
-                      <button className="mx-auto" disabled title="Edición deshabilitada temporalmente">
-                        {data.matriz[module] && data.matriz[module][role] ? (
-                          <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center hover:bg-green-200 transition-colors">
-                            <Check className="w-5 h-5 text-green-600" />
-                          </div>
-                        ) : (
-                          <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center hover:bg-red-200 transition-colors">
-                            <X className="w-5 h-5 text-red-600" />
-                          </div>
-                        )}
-                      </button>
-                    </td>
-                  ))}
+                  {data.roles.map((role) => {
+                    const hasPermission = data.matriz[module] && data.matriz[module][role];
+                    return (
+                      <td key={`${module}-${role}`} className="px-6 py-4 text-center">
+                        <button 
+                          onClick={() => handleToggle(module, role, hasPermission)}
+                          className="mx-auto cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F77F00] rounded-lg transition-transform hover:scale-110 active:scale-95" 
+                          title="Clic para cambiar el permiso"
+                        >
+                          {hasPermission ? (
+                            <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center hover:bg-green-200 transition-colors">
+                              <Check className="w-5 h-5 text-green-600" />
+                            </div>
+                          ) : (
+                            <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center hover:bg-red-200 transition-colors">
+                              <X className="w-5 h-5 text-red-600" />
+                            </div>
+                          )}
+                        </button>
+                      </td>
+                    );
+                  })}
                 </tr>
               ))}
               
@@ -145,13 +178,6 @@ export default function Permissions() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Save Button */}
-      <div className="flex justify-end opacity-50 cursor-not-allowed">
-        <button disabled className="bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white px-8 py-3 rounded-lg cursor-not-allowed">
-          Guardar Cambios (Próximamente)
-        </button>
       </div>
     </div>
   );

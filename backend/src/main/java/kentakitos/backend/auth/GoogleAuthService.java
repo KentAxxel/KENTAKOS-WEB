@@ -1,7 +1,13 @@
 package kentakitos.backend.auth;
 
+import kentakitos.backend.dto.UsuarioResponseDTO;
+import kentakitos.backend.entity.Roles;
+import kentakitos.backend.entity.UsuarioRol;
 import kentakitos.backend.entity.Usuarios;
+import kentakitos.backend.repository.RolesRepository;
+import kentakitos.backend.repository.UsuarioRolRepository;
 import kentakitos.backend.repository.UsuariosRepository;
+import kentakitos.backend.service.UsuariosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +25,16 @@ public class GoogleAuthService {
     @Autowired
     private UsuariosRepository usuariosRepository;
 
-    public Usuarios verifyAndSaveUser(String accessToken) {
+    @Autowired
+    private RolesRepository rolesRepository;
+
+    @Autowired
+    private UsuarioRolRepository usuarioRolRepository;
+
+    @Autowired
+    private UsuariosService usuariosService;
+
+    public UsuarioResponseDTO verifyAndSaveUser(String accessToken) {
         // 1. Verificar el token con Google y obtener la información del usuario
         RestTemplate restTemplate = new RestTemplate();
         String userInfoUrl = "https://www.googleapis.com/oauth2/v3/userinfo";
@@ -44,8 +59,10 @@ public class GoogleAuthService {
 
             if (existingUser.isPresent()) {
                 // Si existe, lo retornamos (Login exitoso)
-                return existingUser.get();
+                return usuariosService.convertToDto(existingUser.get());
             } else {
+                boolean isFirstUser = usuariosRepository.count() == 0;
+
                 // Si no existe, lo creamos (Registro exitoso)
                 Usuarios newUser = new Usuarios();
                 newUser.setCorreo(email);
@@ -57,7 +74,19 @@ public class GoogleAuthService {
                 newUser.setContrasena("GOOGLE_AUTH"); 
                 newUser.setTelefono(0);
                 
-                return usuariosRepository.save(newUser);
+                newUser = usuariosRepository.save(newUser);
+
+                if (isFirstUser) {
+                    Optional<Roles> adminRoleOpt = rolesRepository.findByNombrerol("ADMIN");
+                    if (adminRoleOpt.isPresent()) {
+                        UsuarioRol usuarioRol = new UsuarioRol();
+                        usuarioRol.setUsuario(newUser);
+                        usuarioRol.setRol(adminRoleOpt.get());
+                        usuarioRolRepository.save(usuarioRol);
+                    }
+                }
+
+                return usuariosService.convertToDto(newUser);
             }
 
         } catch (Exception e) {

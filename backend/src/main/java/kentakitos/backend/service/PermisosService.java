@@ -62,4 +62,26 @@ public class PermisosService {
         matrizDTO.setMatriz(matriz);
         return matrizDTO;
     }
+
+    public void togglePermiso(kentakitos.backend.dto.TogglePermisoDTO dto) {
+        Roles rol = rolesRepository.findByNombrerol(dto.getRolName())
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        Permisos permiso = permisosRepository.findByNombrepermiso(dto.getModuloName())
+                .orElseThrow(() -> new RuntimeException("Permiso no encontrado"));
+
+        java.util.Optional<RolPermiso> optionalRp = rolPermisoRepository.findByRol_IdrolAndPermiso_Idpermiso(rol.getIdrol(), permiso.getIdpermiso());
+
+        if (dto.isConceder()) {
+            if (optionalRp.isEmpty()) {
+                RolPermiso rp = new RolPermiso();
+                rp.setRol(rol);
+                rp.setPermiso(permiso);
+                rolPermisoRepository.save(rp);
+            }
+        } else {
+            if (optionalRp.isPresent()) {
+                rolPermisoRepository.delete(optionalRp.get());
+            }
+        }
+    }
 }

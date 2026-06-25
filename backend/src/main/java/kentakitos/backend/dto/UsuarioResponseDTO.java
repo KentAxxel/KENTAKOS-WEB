@@ -8,6 +8,9 @@ public class UsuarioResponseDTO {
     private String name;
     private String email;
     private String role;
+    private Integer roleId;
     private String status;
     private String avatar;
+    private String authProvider;
+    private String username;
 }

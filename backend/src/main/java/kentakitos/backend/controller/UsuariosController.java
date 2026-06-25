@@ -23,4 +23,18 @@ public class UsuariosController {
     public ResponseEntity<List<UsuarioResponseDTO>> getAllUsuarios() {
         return ResponseEntity.ok(usuariosService.getAllUsuarios());
     }
+
+    @org.springframework.web.bind.annotation.PutMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDTO> updateUsuario(
+            @org.springframework.web.bind.annotation.PathVariable Integer id,
+            @org.springframework.web.bind.annotation.RequestBody kentakitos.backend.dto.UsuarioUpdateDTO dto) {
+        return ResponseEntity.ok(usuariosService.updateUsuario(id, dto));
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUsuario(
+            @org.springframework.web.bind.annotation.PathVariable Integer id) {
+        usuariosService.deleteUsuario(id);
+        return ResponseEntity.noContent().build();
+    }
 }

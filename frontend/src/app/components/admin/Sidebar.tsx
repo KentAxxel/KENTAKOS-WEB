@@ -33,6 +33,12 @@ const menuItems = [
 export default function Sidebar() {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const userString = localStorage.getItem('user');
+  const user = userString ? JSON.parse(userString) : null;
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+  };
 
   return (
     <aside
@@ -62,30 +68,37 @@ export default function Sidebar() {
 
       {/* Menu Items */}
       <nav className="p-4 space-y-2 overflow-y-auto h-[calc(100vh-8rem)]">
-        {menuItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all ${
-                isActive
-                  ? 'bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white shadow-lg'
-                  : 'text-gray-400 hover:bg-white/10 hover:text-white'
-              }`}
-              title={isCollapsed ? item.label : ''}
-            >
-              <item.icon className="w-5 h-5 flex-shrink-0" />
-              {!isCollapsed && <span>{item.label}</span>}
-            </Link>
-          );
-        })}
+        {user?.role && user.role !== 'Sin Rol' ? (
+          menuItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all ${
+                  isActive
+                    ? 'bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white shadow-lg'
+                    : 'text-gray-400 hover:bg-white/10 hover:text-white'
+                }`}
+                title={isCollapsed ? item.label : ''}
+              >
+                <item.icon className="w-5 h-5 flex-shrink-0" />
+                {!isCollapsed && <span>{item.label}</span>}
+              </Link>
+            );
+          })
+        ) : (
+          <div className="text-gray-500 text-sm p-4 text-center">
+            {!isCollapsed && "No tienes permisos"}
+          </div>
+        )}
       </nav>
 
       {/* Footer */}
       <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10">
         <Link
           to="/"
+          onClick={handleLogout}
           className="flex items-center space-x-3 px-4 py-3 text-gray-400 hover:bg-white/10 hover:text-white rounded-lg transition-all"
           title={isCollapsed ? 'Cerrar Sesión' : ''}
         >

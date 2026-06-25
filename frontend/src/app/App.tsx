@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import Navbar from './components/public/Navbar';
 import Hero from './components/public/Hero';
 import Menu from './components/public/Menu';
@@ -38,6 +39,21 @@ function PublicPage() {
 
 // Admin Layout
 function AdminLayout({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+  const userString = localStorage.getItem('user');
+  const user = userString ? JSON.parse(userString) : null;
+
+  // Si no está logueado, mandarlo al login
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Si está logueado pero no tiene rol, solo puede ver el Dashboard (que muestra el mensaje de restricción)
+  const isRestrictedUser = !user.role || user.role === 'Sin Rol';
+  if (isRestrictedUser && location.pathname !== '/admin') {
+    return <Navigate to="/admin" replace />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar />
@@ -54,6 +70,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <GoogleOAuthProvider clientId="527408127768-gina8rmjvj737t9v0n2hljhnk4c56j1o.apps.googleusercontent.com">
+      <Toaster richColors position="top-right" />
       <BrowserRouter basename="/kentakitos/">
         <Routes>
           {/* Public Routes */}

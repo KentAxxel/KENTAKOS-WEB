@@ -21,4 +21,10 @@ public class PermisosController {
     public ResponseEntity<MatrizPermisosDTO> getMatrizPermisos() {
         return ResponseEntity.ok(permisosService.getMatrizPermisos());
     }
+
+    @org.springframework.web.bind.annotation.PostMapping("/toggle")
+    public ResponseEntity<Void> togglePermiso(@org.springframework.web.bind.annotation.RequestBody kentakitos.backend.dto.TogglePermisoDTO dto) {
+        permisosService.togglePermiso(dto);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -1,4 +1,4 @@
-import { TrendingUp, DollarSign, ShoppingBag, Users, ArrowUp, ArrowDown } from 'lucide-react';
+import { TrendingUp, DollarSign, ShoppingBag, Users, ArrowUp, ArrowDown, Shield } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 
 const salesData = [
@@ -65,6 +65,24 @@ const topProducts = [
 ];
 
 export default function Dashboard() {
+  const userString = localStorage.getItem('user');
+  const user = userString ? JSON.parse(userString) : null;
+
+  if (!user?.role || user.role === 'Sin Rol') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
+        <div className="w-24 h-24 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+          <Shield className="w-12 h-12" />
+        </div>
+        <h2 className="text-3xl font-bold text-[#111111]">Acceso Restringido</h2>
+        <p className="text-gray-600 max-w-md text-lg">
+          Actualmente no tienes un rol ni permisos asignados en el sistema. 
+          Por favor, solicita a un Administrador que configure tu cuenta.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Page Header */}

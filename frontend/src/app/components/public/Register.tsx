@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail, Lock, User } from 'lucide-react';
 import { useGoogleLogin } from '@react-oauth/google';
+import { toast } from 'sonner';
 
 export default function Register() {
   const [username, setUsername] = useState('');
@@ -9,17 +10,35 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Register attempt with:', { username, email, password });
-    // TODO: Connect with Java Backend later
+    try {
+      const res = await fetch('http://localhost:8080/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+      });
+      if (res.ok) {
+        const userData = await res.json();
+        console.log("Usuario registrado y autenticado:", userData);
+        localStorage.setItem('user', JSON.stringify(userData));
+        toast.success("¡Bienvenido " + userData.name + "!");
+        navigate('/admin');
+      } else {
+        const errorText = await res.text();
+        toast.error("Error al registrar: " + errorText);
+      }
+    } catch (e) {
+      console.error("Error de conexion al backend", e);
+      toast.error("Error conectando al servidor.");
+    }
   };
 
   const loginWithGoogle = useGoogleLogin({
     onSuccess: async codeResponse => {
       console.log('Google Login Success:', codeResponse);
       try {
-        const res = await fetch('http://shop.spring.informaticapp.com:2920/api/auth/google', {
+        const res = await fetch('http://localhost:8080/api/auth/google', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ accessToken: codeResponse.access_token })
@@ -28,19 +47,23 @@ export default function Register() {
         if (res.ok) {
            const userData = await res.json();
            console.log("Usuario autenticado correctamente en BD:", userData);
-           alert("¡Bienvenido " + userData.nombre + "!");
-           navigate('/admin'); // Temporarily navigate to admin on success
+           localStorage.setItem('user', JSON.stringify(userData));
+           toast.success("¡Bienvenido " + userData.name + "!");
+           navigate('/admin'); 
         } else {
            const errorText = await res.text();
            console.error("Error del backend:", errorText);
-           alert("Error al iniciar sesión: " + errorText);
+           toast.error("Error al iniciar sesión: " + errorText);
         }
       } catch(e) {
          console.error("Error de conexion al backend", e);
-         alert("Error conectando al servidor. Asegúrate de que el backend esté corriendo.");
+         toast.error("Error conectando al servidor.");
       }
     },
-    onError: error => console.log('Google Login Failed:', error)
+    onError: error => {
+      console.log('Google Login Failed:', error);
+      toast.error("Error al iniciar sesión con Google");
+    }
   });
 
   return (

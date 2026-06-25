@@ -46,4 +46,23 @@ public class RolesService {
             return dto;
         }).collect(Collectors.toList());
     }
+
+    public RolResponseDTO createRole(kentakitos.backend.dto.RolUpdateDTO dto) {
+        Roles rol = new Roles();
+        rol.setNombrerol(dto.getNombre().toUpperCase());
+        rol.setDeleted(1);
+        rolesRepository.save(rol);
+        return getAllRoles().stream().filter(r -> r.getIdRol().equals(rol.getIdrol())).findFirst().orElse(null);
+    }
+
+    public RolResponseDTO updateRole(Integer id, kentakitos.backend.dto.RolUpdateDTO dto) {
+        Roles rol = rolesRepository.findById(id).orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        rol.setNombrerol(dto.getNombre().toUpperCase());
+        rolesRepository.save(rol);
+        return getAllRoles().stream().filter(r -> r.getIdRol().equals(rol.getIdrol())).findFirst().orElse(null);
+    }
+
+    public void deleteRole(Integer id) {
+        rolesRepository.deleteById(id);
+    }
 }
