@@ -24,6 +24,12 @@ public class UsuariosController {
         return ResponseEntity.ok(usuariosService.getAllUsuarios());
     }
 
+    @org.springframework.web.bind.annotation.PostMapping
+    public ResponseEntity<UsuarioResponseDTO> createUsuario(
+            @org.springframework.web.bind.annotation.RequestBody kentakitos.backend.auth.dto.RegisterRequest request) {
+        return ResponseEntity.ok(usuariosService.createUsuario(request));
+    }
+
     @org.springframework.web.bind.annotation.PutMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> updateUsuario(
             @org.springframework.web.bind.annotation.PathVariable Integer id,

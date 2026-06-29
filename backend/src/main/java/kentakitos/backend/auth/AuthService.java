@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.Optional;
 
+import kentakitos.backend.util.PasswordUtils;
+
 @Service
 public class AuthService {
 
@@ -59,7 +61,7 @@ public class AuthService {
         newUser.setNombre(request.getUsername()); // Username como nombre base
         newUser.setUsername(request.getUsername());
         newUser.setCorreo(request.getEmail());
-        newUser.setContrasena(request.getPassword()); // En un proyecto real esto iría encriptado (Bcrypt)
+        newUser.setContrasena(PasswordUtils.hashSHA256(request.getPassword()));
         newUser.setAuthProvider("LOCAL");
         newUser.setTelefono(0);
         
@@ -85,7 +87,8 @@ public class AuthService {
         Usuarios usuario = usuariosRepository.findByCorreo(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        if (!usuario.getContrasena().equals(request.getPassword())) {
+        String hashedInputPassword = PasswordUtils.hashSHA256(request.getPassword());
+        if (!usuario.getContrasena().equals(hashedInputPassword)) {
             throw new RuntimeException("Contraseña incorrecta");
         }
 

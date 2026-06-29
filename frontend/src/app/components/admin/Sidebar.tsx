@@ -39,7 +39,7 @@ export default function Sidebar() {
   const handleLogout = async () => {
     if (user?.id) {
       try {
-        await fetch(`http://shop.spring.informaticapp.com:2920/api/auth/logout?userId=${user.id}`, { method: 'POST' });
+        await fetch(`http://localhost:2920/api/auth/logout?userId=${user.id}`, { method: 'POST' });
       } catch (error) {
         console.error('Error al cerrar sesión en el servidor:', error);
       }

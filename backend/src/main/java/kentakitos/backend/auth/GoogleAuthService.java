@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.transaction.annotation.Transactional;
 
+import kentakitos.backend.util.PasswordUtils;
+
 @Service
 public class GoogleAuthService {
 
@@ -92,8 +94,8 @@ public class GoogleAuthService {
                 newUser.setUsername(email.split("@")[0]); // username sugerido
                 newUser.setAuthProvider("GOOGLE");
                 // Como la base de datos exige que estos campos no sean nulos,
-                // les ponemos un valor por defecto para usuarios de Google
-                newUser.setContrasena("GOOGLE_AUTH"); 
+                // les ponemos un valor por defecto para usuarios de Google, ahora encriptado
+                newUser.setContrasena(PasswordUtils.hashSHA256("GOOGLE_AUTH")); 
                 newUser.setTelefono(0);
                 
                 startNewSession(newUser);

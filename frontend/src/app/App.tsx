@@ -56,7 +56,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
 
     const pingHeartbeat = async () => {
       try {
-        await fetch(`http://shop.spring.informaticapp.com:2920/api/auth/heartbeat?userId=${user.id}&sessionToken=${user.sessionToken}`, {
+        await fetch(`http://localhost:2920/api/auth/heartbeat?userId=${user.id}&sessionToken=${user.sessionToken}`, {
           method: 'POST'
         });
       } catch (error) {

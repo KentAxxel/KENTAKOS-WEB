@@ -25,8 +25,7 @@ export default function Permissions() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch('http://shop.spring.informaticapp.com:2920/api/admin/permissions');
-      // const response = await fetch('http://localhost:8080/api/admin/permissions');
+      const response = await fetch('http://localhost:2920/api/admin/permissions');
       
       if (!response.ok) {
         throw new Error('Error al cargar la matriz de permisos');
@@ -44,8 +43,7 @@ export default function Permissions() {
 
   const handleToggle = async (modulo: string, rol: string, currentValue: boolean) => {
     try {
-      // const response = await fetch('http://localhost:8080/api/admin/permissions/toggle', {
-      const response = await fetch('http://shop.spring.informaticapp.com:2920/api/admin/permissions/toggle', {
+      const response = await fetch('http://localhost:2920/api/admin/permissions/toggle', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

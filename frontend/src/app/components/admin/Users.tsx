@@ -10,20 +10,23 @@ export default function Users() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
 
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newUser, setNewUser] = useState({ username: '', email: '', password: '' });
+
   useEffect(() => {
     fetchUsers();
     fetchRoles();
   }, []);
 
   const fetchUsers = () => {
-    fetch('http://shop.spring.informaticapp.com:2920/api/usuarios')
+    fetch('http://localhost:2920/api/usuarios')
       .then((res) => res.json())
       .then((data) => setUsers(data))
       .catch((error) => console.error('Error fetching users:', error));
   };
 
   const fetchRoles = () => {
-    fetch('http://shop.spring.informaticapp.com:2920/api/admin/roles')
+    fetch('http://localhost:2920/api/admin/roles')
       .then((res) => res.json())
       .then((data) => setRoles(data))
       .catch((error) => console.error('Error fetching roles:', error));
@@ -32,7 +35,7 @@ export default function Users() {
   const handleDelete = async (id: number) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
       try {
-        const response = await fetch(`http://shop.spring.informaticapp.com:2920/api/usuarios/${id}`, {
+        const response = await fetch(`http://localhost:2920/api/usuarios/${id}`, {
           method: 'DELETE',
         });
         if (response.ok) {
@@ -60,7 +63,7 @@ export default function Users() {
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://shop.spring.informaticapp.com:2920/api/usuarios/${editingUser.id}`, {
+      const response = await fetch(`http://localhost:2920/api/usuarios/${editingUser.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -82,6 +85,38 @@ export default function Users() {
     }
   };
 
+  const openCreateModal = () => {
+    setNewUser({ username: '', email: '', password: '' });
+    setIsCreateModalOpen(true);
+  };
+
+  const closeCreateModal = () => {
+    setIsCreateModalOpen(false);
+  };
+
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:2920/api/usuarios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: newUser.username,
+          email: newUser.email,
+          password: newUser.password
+        })
+      });
+      if (response.ok) {
+        closeCreateModal();
+        fetchUsers();
+      } else {
+        alert('Error al crear el usuario. Tal vez el correo ya existe.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   const filteredUsers = users.filter(u => 
     u.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
     u.email?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -95,7 +130,9 @@ export default function Users() {
           <h1 className="text-3xl font-bold text-[#111111]">Usuarios</h1>
           <p className="text-gray-600">Gestión de usuarios del sistema</p>
         </div>
-        <button className="bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white px-6 py-3 rounded-lg hover:shadow-lg transition-all flex items-center space-x-2">
+        <button 
+          onClick={openCreateModal}
+          className="bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white px-6 py-3 rounded-lg hover:shadow-lg transition-all flex items-center space-x-2">
           <Plus className="w-5 h-5" />
           <span>Nuevo Usuario</span>
         </button>
@@ -284,6 +321,71 @@ export default function Users() {
                   className="px-5 py-2 bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white rounded-xl font-bold hover:shadow-lg transition-all"
                 >
                   Guardar Cambios
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Create Modal */}
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+              <h3 className="text-xl font-bold text-gray-900">Nuevo Usuario</h3>
+              <button onClick={closeCreateModal} className="text-gray-400 hover:text-gray-700 transition-colors">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleCreate} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre y Apellido</label>
+                <input
+                  type="text"
+                  value={newUser.username}
+                  onChange={(e) => setNewUser({...newUser, username: e.target.value})}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D62828] outline-none transition-all"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Correo Electrónico</label>
+                <input
+                  type="email"
+                  value={newUser.email}
+                  onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D62828] outline-none transition-all"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Contraseña</label>
+                <input
+                  type="password"
+                  value={newUser.password}
+                  onChange={(e) => setNewUser({...newUser, password: e.target.value})}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D62828] outline-none transition-all"
+                  required
+                />
+              </div>
+
+              <div className="pt-4 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={closeCreateModal}
+                  className="px-5 py-2 text-gray-600 hover:bg-gray-100 rounded-xl font-medium transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white rounded-xl font-bold hover:shadow-lg transition-all"
+                >
+                  Crear Usuario
                 </button>
               </div>
             </form>

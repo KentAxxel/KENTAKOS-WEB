@@ -62,6 +62,32 @@ public class UsuariosService {
     }
 
     @Transactional
+    public UsuarioResponseDTO createUsuario(kentakitos.backend.auth.dto.RegisterRequest request) {
+        if (usuariosRepository.findByCorreo(request.getEmail()).isPresent()) {
+            throw new RuntimeException("El correo ya está registrado");
+        }
+        Usuarios newUser = new Usuarios();
+        newUser.setNombre(request.getUsername());
+        newUser.setUsername(request.getUsername());
+        newUser.setCorreo(request.getEmail());
+        newUser.setContrasena(kentakitos.backend.util.PasswordUtils.hashSHA256(request.getPassword()));
+        newUser.setAuthProvider("LOCAL");
+        newUser.setTelefono(0);
+        newUser.setDeleted(1); // 1 = Activo
+        newUser = usuariosRepository.save(newUser);
+        
+        java.util.Optional<Roles> userRoleOpt = rolesRepository.findByNombrerol("USUARIO");
+        if (userRoleOpt.isPresent()) {
+            UsuarioRol usuarioRol = new UsuarioRol();
+            usuarioRol.setUsuario(newUser);
+            usuarioRol.setRol(userRoleOpt.get());
+            usuarioRolRepository.save(usuarioRol);
+        }
+        
+        return convertToDto(newUser);
+    }
+
+    @Transactional
     public UsuarioResponseDTO updateUsuario(Integer id, UsuarioUpdateDTO dto) {
         Usuarios usuario = usuariosRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));

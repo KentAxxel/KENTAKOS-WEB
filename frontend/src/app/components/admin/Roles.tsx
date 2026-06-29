@@ -37,7 +37,7 @@ export default function Roles() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch('http://shop.spring.informaticapp.com:2920/api/admin/roles');
+      const response = await fetch('http://localhost:2920/api/admin/roles');
       // const response = await fetch('http://localhost:8080/api/admin/roles');
       
       if (!response.ok) {
