@@ -20,61 +20,19 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    private final CustomOAuth2UserService customOAuth2UserService;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
-        this.customOAuth2UserService = customOAuth2UserService;
-    }
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                // Rutas públicas
-                .requestMatchers("/login", "/oauth2/**", "/css/**", "/js/**", "/images/**").permitAll()
-                // Solo admin puede gestionar usuarios (ajusta según tus endpoints)
-                .requestMatchers("/kentakitos/usuarios/**").hasRole("ADMIN")
-                .requestMatchers("/menu", "/pedidos").authenticated()
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/home", true)
-                .failureUrl("/login?error=true")
-                .permitAll()
-            )
-            .oauth2Login(oauth2 -> oauth2
-                .loginPage("/login")
-                .userInfoEndpoint(userInfo -> userInfo
-                    .userService(customOAuth2UserService)
-                )
-                .defaultSuccessUrl("/home", true)
-            )
-            .logout(logout -> logout
-                .logoutSuccessUrl("/login?logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .permitAll()
-            )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .maximumSessions(1)                  // solo una sesión activa
-                .maxSessionsPreventsLogin(true)      // no permite una segunda sesión
-                .expiredSessionStrategy(sessionInformationExpiredStrategy())
-                .sessionRegistry(sessionRegistry())
-            );
-
-        return http.build();
-    }
+    @Autowired
+    private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -82,30 +40,34 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SessionRegistry sessionRegistry() {
-        return new SessionRegistryImpl();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     @Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher() {
-        return new HttpSessionEventPublisher(); // necesario para SessionRegistry
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .cors().and()
+            .csrf().disable()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT
+            .and()
+            .authorizeRequests()
+                .antMatchers("/kentakitos/auth/**", "/kentakitos/usuarios/**", "/oauth2/**").permitAll()
+                .anyRequest().authenticated()
+            .and()
+            .oauth2Login()
+                .userInfoEndpoint()
+                    .userService(customOAuth2UserService) // nuestro manejador OAuth2
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler) // devolver JWT al front
+            .and()
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
     @Bean
-    public SessionInformationExpiredStrategy sessionInformationExpiredStrategy() {
-        return event -> event.getResponse().sendRedirect("/login?expired");
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
     }
 }

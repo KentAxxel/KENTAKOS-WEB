@@ -7,21 +7,42 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/kentakitos/auth")
 public class AuthController {
 
     @Autowired
-    private GoogleAuthService googleAuthService;
+    AuthenticationManager authenticationManager;
 
-    @PostMapping("/google")
-    public ResponseEntity<?> authenticateWithGoogle(@RequestBody GoogleTokenRequest request) {
+    @Autowired
+    JwtProvider jwtProvider;
+
+    @Autowired
+    UsuariosRepository usuariosRepository;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
         try {
-            Usuarios usuario = googleAuthService.verifyAndSaveUser(request.getAccessToken());
-            // En el futuro, aquí generaríamos y devolveríamos nuestro propio JWT.
-            // Por ahora, solo retornamos los datos del usuario.
-            return ResponseEntity.ok(usuario);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error al autenticar: " + e.getMessage());
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword())
+            );
+
+            // Si llega aquí, la autenticación fue exitosa
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // Obtener el usuario desde BD para tener la entidad completa
+            Usuarios usuario = usuariosRepository.findByUsername(loginDTO.getUsername())
+                    .orElseThrow();
+
+            // Incrementar tokenVersion para invalidar sesiones anteriores
+            usuariosRepository.incrementarTokenVersion(usuario.getIdusuario());
+            usuario.setTokenVersion(usuario.getTokenVersion() + 1); // mantener consistencia en objeto
+
+            // Generar JWT con la nueva versión
+            String jwt = jwtProvider.generarToken(usuario);
+
+            return ResponseEntity.ok(new JwtResponse(jwt, usuario.getNombre(), usuario.getUsername()));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
         }
     }
 }
