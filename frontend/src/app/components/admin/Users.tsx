@@ -19,14 +19,16 @@ export default function Users() {
   }, []);
 
   const fetchUsers = () => {
-    fetch('https://shop.spring.informaticapp.com/api/usuarios')
+    // fetch('https://shop.spring.informaticapp.com/api/usuarios')
+    fetch('http://localhost:2920/api/usuarios')
       .then((res) => res.json())
       .then((data) => setUsers(data))
       .catch((error) => console.error('Error fetching users:', error));
   };
 
   const fetchRoles = () => {
-    fetch('https://shop.spring.informaticapp.com/api/admin/roles')
+    // fetch('https://shop.spring.informaticapp.com/api/admin/roles')
+    fetch('http://localhost:2920/api/admin/roles')
       .then((res) => res.json())
       .then((data) => setRoles(data))
       .catch((error) => console.error('Error fetching roles:', error));
@@ -35,7 +37,8 @@ export default function Users() {
   const handleDelete = async (encryptedId: string) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
       try {
-        const response = await fetch(`https://shop.spring.informaticapp.com/api/usuarios/${encryptedId}`, {
+        // const response = await fetch(`https://shop.spring.informaticapp.com/api/usuarios/${encryptedId}`, {
+        const response = await fetch(`http://localhost:2920/api/usuarios/${encryptedId}`, {
           method: 'DELETE',
         });
         if (response.ok) {
@@ -63,7 +66,8 @@ export default function Users() {
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`https://shop.spring.informaticapp.com/api/usuarios/${editingUser.encryptedId}`, {
+      // const response = await fetch(`https://shop.spring.informaticapp.com/api/usuarios/${editingUser.encryptedId}`, {
+      const response = await fetch(`http://localhost:2920/api/usuarios/${editingUser.encryptedId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -97,7 +101,8 @@ export default function Users() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://shop.spring.informaticapp.com/api/usuarios', {
+      // const response = await fetch('https://shop.spring.informaticapp.com/api/usuarios', {
+      const response = await fetch('http://localhost:2920/api/usuarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
