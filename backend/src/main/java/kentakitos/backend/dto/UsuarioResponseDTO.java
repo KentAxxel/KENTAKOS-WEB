@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class UsuarioResponseDTO {
     private Integer id;
+    private String encryptedId; // ID ofuscado para seguridad en tránsito
     private String name;
     private String email;
     private String role;

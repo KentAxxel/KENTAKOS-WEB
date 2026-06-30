@@ -8,6 +8,7 @@ import kentakitos.backend.entity.Usuarios;
 import kentakitos.backend.repository.RolesRepository;
 import kentakitos.backend.repository.UsuarioRolRepository;
 import kentakitos.backend.repository.UsuariosRepository;
+import kentakitos.backend.service.AuditLogsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,18 +19,27 @@ import java.util.stream.Collectors;
 public class UsuariosService {
 
     private final UsuariosRepository usuariosRepository;
-    private final UsuarioRolRepository usuarioRolRepository;
     private final RolesRepository rolesRepository;
+    private final UsuarioRolRepository usuarioRolRepository;
+    private final AuditLogsService auditLogsService;
 
-    public UsuariosService(UsuariosRepository usuariosRepository, UsuarioRolRepository usuarioRolRepository, RolesRepository rolesRepository) {
+    public UsuariosService(UsuariosRepository usuariosRepository, 
+                           RolesRepository rolesRepository,
+                           UsuarioRolRepository usuarioRolRepository,
+                           AuditLogsService auditLogsService) {
         this.usuariosRepository = usuariosRepository;
-        this.usuarioRolRepository = usuarioRolRepository;
         this.rolesRepository = rolesRepository;
+        this.usuarioRolRepository = usuarioRolRepository;
+        this.auditLogsService = auditLogsService;
     }
 
     public UsuarioResponseDTO convertToDto(Usuarios usuario) {
         UsuarioResponseDTO dto = new UsuarioResponseDTO();
         dto.setId(usuario.getIdusuario());
+        
+        // Cifrar el ID para ofuscación en tránsito
+        dto.setEncryptedId(kentakitos.backend.util.CustomCipher.cifrar(String.valueOf(usuario.getIdusuario()), 5));
+        
         dto.setName(usuario.getNombre());
         dto.setUsername(usuario.getUsername());
         dto.setEmail(usuario.getCorreo());
@@ -84,6 +94,13 @@ public class UsuariosService {
             usuarioRolRepository.save(usuarioRol);
         }
         
+        auditLogsService.logEvent(
+            "CREATE_USER_ADMIN", 
+            "ADMIN", 
+            "127.0.0.1", 
+            "Administrador creó un nuevo usuario con email: " + newUser.getCorreo()
+        );
+
         return convertToDto(newUser);
     }
 

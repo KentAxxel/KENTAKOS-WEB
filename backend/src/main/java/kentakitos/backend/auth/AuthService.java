@@ -9,6 +9,7 @@ import kentakitos.backend.entity.Usuarios;
 import kentakitos.backend.repository.RolesRepository;
 import kentakitos.backend.repository.UsuarioRolRepository;
 import kentakitos.backend.repository.UsuariosRepository;
+import kentakitos.backend.service.AuditLogsService;
 import kentakitos.backend.service.UsuariosService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,13 +27,16 @@ public class AuthService {
     private final RolesRepository rolesRepository;
     private final UsuarioRolRepository usuarioRolRepository;
     private final UsuariosService usuariosService;
+    private final AuditLogsService auditLogsService;
 
     public AuthService(UsuariosRepository usuariosRepository, RolesRepository rolesRepository,
-                       UsuarioRolRepository usuarioRolRepository, UsuariosService usuariosService) {
+                       UsuarioRolRepository usuarioRolRepository, UsuariosService usuariosService,
+                       AuditLogsService auditLogsService) {
         this.usuariosRepository = usuariosRepository;
         this.rolesRepository = rolesRepository;
         this.usuarioRolRepository = usuarioRolRepository;
         this.usuariosService = usuariosService;
+        this.auditLogsService = auditLogsService;
     }
 
     private void checkActiveSession(Usuarios usuario) {
@@ -79,6 +83,8 @@ public class AuthService {
             }
         }
 
+        auditLogsService.logEvent("REGISTER_USER", newUser.getNombre(), "127.0.0.1", "Nuevo usuario registrado con email: " + newUser.getCorreo());
+
         return usuariosService.convertToDto(newUser);
     }
 
@@ -96,6 +102,8 @@ public class AuthService {
         startNewSession(usuario);
         
         usuario = usuariosRepository.save(usuario);
+
+        auditLogsService.logEvent("LOGIN_SUCCESS", usuario.getNombre(), "127.0.0.1", "El usuario inició sesión exitosamente.");
 
         return usuariosService.convertToDto(usuario);
     }
@@ -120,6 +128,7 @@ public class AuthService {
             usuario.setSessionToken(null);
             usuario.setLastActive(null);
             usuariosRepository.save(usuario);
+            auditLogsService.logEvent("LOGOUT", usuario.getNombre(), "127.0.0.1", "El usuario cerró sesión.");
         }
     }
 }

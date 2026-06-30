@@ -30,16 +30,21 @@ public class UsuariosController {
         return ResponseEntity.ok(usuariosService.createUsuario(request));
     }
 
-    @org.springframework.web.bind.annotation.PutMapping("/{id}")
+    @org.springframework.web.bind.annotation.PutMapping("/{encryptedId}")
     public ResponseEntity<UsuarioResponseDTO> updateUsuario(
-            @org.springframework.web.bind.annotation.PathVariable Integer id,
+            @org.springframework.web.bind.annotation.PathVariable String encryptedId,
             @org.springframework.web.bind.annotation.RequestBody kentakitos.backend.dto.UsuarioUpdateDTO dto) {
+        // Descifrar el ID recibido
+        String decryptedStr = kentakitos.backend.util.CustomCipher.descifrar(encryptedId, 5);
+        Integer id = Integer.parseInt(decryptedStr);
         return ResponseEntity.ok(usuariosService.updateUsuario(id, dto));
     }
 
-    @org.springframework.web.bind.annotation.DeleteMapping("/{id}")
+    @org.springframework.web.bind.annotation.DeleteMapping("/{encryptedId}")
     public ResponseEntity<Void> deleteUsuario(
-            @org.springframework.web.bind.annotation.PathVariable Integer id) {
+            @org.springframework.web.bind.annotation.PathVariable String encryptedId) {
+        String decryptedStr = kentakitos.backend.util.CustomCipher.descifrar(encryptedId, 5);
+        Integer id = Integer.parseInt(decryptedStr);
         usuariosService.deleteUsuario(id);
         return ResponseEntity.noContent().build();
     }

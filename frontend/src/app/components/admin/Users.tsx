@@ -32,10 +32,10 @@ export default function Users() {
       .catch((error) => console.error('Error fetching roles:', error));
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (encryptedId: string) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
       try {
-        const response = await fetch(`http://localhost:2920/api/usuarios/${id}`, {
+        const response = await fetch(`http://localhost:2920/api/usuarios/${encryptedId}`, {
           method: 'DELETE',
         });
         if (response.ok) {
@@ -63,7 +63,7 @@ export default function Users() {
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:2920/api/usuarios/${editingUser.id}`, {
+      const response = await fetch(`http://localhost:2920/api/usuarios/${editingUser.encryptedId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -215,7 +215,7 @@ export default function Users() {
                       <button onClick={() => openEditModal(user)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-[#F77F00]">
                         <Edit className="w-4 h-4" />
                       </button>
-                      <button onClick={() => handleDelete(user.id)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-[#D62828]">
+                      <button onClick={() => handleDelete(user.encryptedId)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-[#D62828]">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
