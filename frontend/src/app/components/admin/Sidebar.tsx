@@ -77,7 +77,30 @@ export default function Sidebar() {
       {/* Menu Items */}
       <nav className="p-4 space-y-2 overflow-y-auto h-[calc(100vh-8rem)]">
         {user?.role && user.role !== 'Sin Rol' ? (
-          menuItems.map((item) => {
+          menuItems.filter(item => {
+            if (user.role === 'ADMIN') return true;
+            
+            const userPerms = user.permisos || [];
+            
+            // Mapeo de rutas a permisos
+            const routePermissions: Record<string, string> = {
+              '/admin/users': 'GESTIONAR_USUARIOS',
+              '/admin/roles': 'GESTIONAR_USUARIOS',
+              '/admin/permissions': 'GESTIONAR_USUARIOS',
+              '/admin/settings': 'GESTIONAR_USUARIOS',
+              '/admin/tables': 'VER_MESAS',
+              '/admin/inventory': 'VER_INVENTARIO',
+              '/admin/dishes': 'VER_INVENTARIO',
+              '/admin/sales': 'VER_CAJA',
+              '/admin/orders': 'VER_CAJA',
+              '/admin/reports': 'VER_REPORTES'
+            };
+
+            const requiredPerm = routePermissions[item.path];
+            if (!requiredPerm) return true; // Rutas sin permiso específico (ej. Dashboard)
+            
+            return userPerms.includes(requiredPerm);
+          }).map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <Link

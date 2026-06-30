@@ -79,6 +79,29 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
     return <Navigate to="/admin" replace />;
   }
 
+  // Validación de permisos dinámicos (basados en la base de datos)
+  if (user.role !== 'ADMIN') {
+    const userPerms = user.permisos || [];
+    
+    const routePermissions: Record<string, string> = {
+      '/admin/users': 'GESTIONAR_USUARIOS',
+      '/admin/roles': 'GESTIONAR_USUARIOS',
+      '/admin/permissions': 'GESTIONAR_USUARIOS',
+      '/admin/settings': 'GESTIONAR_USUARIOS',
+      '/admin/tables': 'VER_MESAS',
+      '/admin/inventory': 'VER_INVENTARIO',
+      '/admin/dishes': 'VER_INVENTARIO',
+      '/admin/sales': 'VER_CAJA',
+      '/admin/orders': 'VER_CAJA',
+      '/admin/reports': 'VER_REPORTES'
+    };
+
+    const requiredPerm = routePermissions[location.pathname];
+    if (requiredPerm && !userPerms.includes(requiredPerm)) {
+      return <Navigate to="/admin" replace />;
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar />

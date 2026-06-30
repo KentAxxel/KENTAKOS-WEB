@@ -75,9 +75,11 @@ export default function Roles() {
   // Guardar rol (crear o actualizar)
   const handleGuardarRol = async () => {
     try {
+      const baseUrl = 'http://localhost:2920';
+      // const baseUrl = 'https://shop.spring.informaticapp.com';
       const url = editingRol
-        ? `/api/admin/roles/${editingRol.idRol}`
-        : '/api/admin/roles';
+        ? `${baseUrl}/api/admin/roles/${editingRol.idRol}`
+        : `${baseUrl}/api/admin/roles`;
 
       const method = editingRol ? 'PUT' : 'POST';
 
@@ -110,7 +112,9 @@ export default function Roles() {
     }
 
     try {
-      const response = await fetch(`/api/admin/roles/${id}`, {
+      const baseUrl = 'http://localhost:2920';
+      // const baseUrl = 'https://shop.spring.informaticapp.com';
+      const response = await fetch(`${baseUrl}/api/admin/roles/${id}`, {
         method: 'DELETE'
       });
 

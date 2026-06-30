@@ -15,4 +15,5 @@ public class UsuarioResponseDTO {
     private String authProvider;
     private String username;
     private String sessionToken;
+    private java.util.List<String> permisos;
 }

@@ -21,15 +21,18 @@ public class UsuariosService {
     private final UsuariosRepository usuariosRepository;
     private final RolesRepository rolesRepository;
     private final UsuarioRolRepository usuarioRolRepository;
+    private final kentakitos.backend.repository.RolPermisoRepository rolPermisoRepository;
     private final AuditLogsService auditLogsService;
 
     public UsuariosService(UsuariosRepository usuariosRepository, 
                            RolesRepository rolesRepository,
                            UsuarioRolRepository usuarioRolRepository,
+                           kentakitos.backend.repository.RolPermisoRepository rolPermisoRepository,
                            AuditLogsService auditLogsService) {
         this.usuariosRepository = usuariosRepository;
         this.rolesRepository = rolesRepository;
         this.usuarioRolRepository = usuarioRolRepository;
+        this.rolPermisoRepository = rolPermisoRepository;
         this.auditLogsService = auditLogsService;
     }
 
@@ -53,11 +56,19 @@ public class UsuariosService {
         List<UsuarioRol> rolesUsuario = usuarioRolRepository.findByUsuario_Idusuario(usuario.getIdusuario());
         if (!rolesUsuario.isEmpty()) {
             // Tomamos el nombre del primer rol encontrado (para simplificar en la tabla)
+            Integer roleId = rolesUsuario.get(0).getRol().getIdrol();
             dto.setRole(rolesUsuario.get(0).getRol().getNombrerol());
-            dto.setRoleId(rolesUsuario.get(0).getRol().getIdrol());
+            dto.setRoleId(roleId);
+            
+            // Buscar permisos para este rol
+            List<String> permisosNombres = rolPermisoRepository.findByRol_Idrol(roleId).stream()
+                .map(rp -> rp.getPermiso().getNombrepermiso())
+                .collect(Collectors.toList());
+            dto.setPermisos(permisosNombres);
         } else {
             dto.setRole("Sin Rol");
             dto.setRoleId(null);
+            dto.setPermisos(new java.util.ArrayList<>());
         }
         
         // Asignar un avatar predeterminado simple
