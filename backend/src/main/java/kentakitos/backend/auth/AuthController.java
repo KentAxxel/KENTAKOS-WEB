@@ -49,8 +49,10 @@ public class AuthController {
     }
 
     @PostMapping("/heartbeat")
-    public ResponseEntity<?> heartbeat(@RequestParam Integer userId, @RequestParam String sessionToken) {
+    public ResponseEntity<?> heartbeat(@RequestParam("userId") String encryptedUserId, @RequestParam String sessionToken) {
         try {
+            // Descifrar el ID cifrado que viene en la URL
+            Integer userId = Integer.parseInt(kentakitos.backend.util.CustomCipher.descifrar(encryptedUserId, 5));
             authService.heartbeat(userId, sessionToken);
             return ResponseEntity.ok("Heartbeat recibido");
         } catch (Exception e) {
@@ -59,8 +61,10 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestParam Integer userId) {
+    public ResponseEntity<?> logout(@RequestParam("userId") String encryptedUserId) {
         try {
+            // Descifrar el ID cifrado que viene en la URL
+            Integer userId = Integer.parseInt(kentakitos.backend.util.CustomCipher.descifrar(encryptedUserId, 5));
             authService.logout(userId);
             return ResponseEntity.ok("Sesión cerrada");
         } catch (Exception e) {

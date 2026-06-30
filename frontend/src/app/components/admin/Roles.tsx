@@ -36,14 +36,14 @@ export default function Roles() {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await fetch('http://localhost:2920/api/admin/roles');
-      // const response = await fetch('http://localhost:8080/api/admin/roles');
-      
+
+      const response = await fetch('https://shop.spring.informaticapp.com/api/admin/roles');
+
+
       if (!response.ok) {
         throw new Error('Error al cargar los roles');
       }
-      
+
       const data = await response.json();
       setRoles(data);
     } catch (err) {
@@ -74,10 +74,10 @@ export default function Roles() {
   // Guardar rol (crear o actualizar)
   const handleGuardarRol = async () => {
     try {
-      const url = editingRol 
-        ? `/api/admin/roles/${editingRol.idRol}` 
+      const url = editingRol
+        ? `/api/admin/roles/${editingRol.idRol}`
         : '/api/admin/roles';
-      
+
       const method = editingRol ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -157,7 +157,7 @@ export default function Roles() {
       <div className="p-8">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
           <p className="text-red-600 mb-4">{error}</p>
-          <button 
+          <button
             onClick={cargarRoles}
             className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700"
           >
@@ -176,7 +176,7 @@ export default function Roles() {
           <h1 className="text-3xl font-bold text-[#111111]">Roles</h1>
           <p className="text-gray-600">Gestión de roles y accesos del sistema</p>
         </div>
-        <button 
+        <button
           onClick={handleNuevoRol}
           className="bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white px-6 py-3 rounded-lg hover:shadow-lg transition-all flex items-center space-x-2"
         >
@@ -193,8 +193,8 @@ export default function Roles() {
           </div>
         ) : (
           roles.map((rol, index) => (
-            <div 
-              key={rol.idRol} 
+            <div
+              key={rol.idRol}
               className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-xl transition-all"
             >
               {/* Header with gradient */}
@@ -214,14 +214,14 @@ export default function Roles() {
 
                 {/* Actions */}
                 <div className="flex gap-2">
-                  <button 
+                  <button
                     onClick={() => handleEditarRol(rol)}
                     className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
                   >
                     <Edit className="w-4 h-4" />
                     <span className="text-sm">Editar</span>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEliminarRol(rol.idRol)}
                     className="flex items-center justify-center px-4 py-2 bg-red-50 hover:bg-red-100 text-[#D62828] rounded-lg transition-colors"
                   >
@@ -242,7 +242,7 @@ export default function Roles() {
               <h2 className="text-2xl font-bold text-[#111111]">
                 {editingRol ? 'Editar Rol' : 'Nuevo Rol'}
               </h2>
-              <button 
+              <button
                 onClick={() => setShowModal(false)}
                 className="p-2 hover:bg-gray-100 rounded-lg"
               >
@@ -258,7 +258,7 @@ export default function Roles() {
                 <input
                   type="text"
                   value={formData.nombre}
-                  onChange={(e) => setFormData({...formData, nombre: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D62828] focus:border-transparent"
                   placeholder="Ej: Administrador"
                 />
@@ -270,7 +270,7 @@ export default function Roles() {
                 </label>
                 <textarea
                   value={formData.descripcion}
-                  onChange={(e) => setFormData({...formData, descripcion: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D62828] focus:border-transparent"
                   rows={3}
                   placeholder="Descripción del rol..."

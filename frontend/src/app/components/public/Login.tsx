@@ -12,7 +12,7 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:2920/api/auth/login', {
+      const res = await fetch('https://shop.spring.informaticapp.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -37,7 +37,7 @@ export default function Login() {
     onSuccess: async codeResponse => {
       console.log('Google Login Success:', codeResponse);
       try {
-        const res = await fetch('http://localhost:2920/api/auth/google', {
+        const res = await fetch('https://shop.spring.informaticapp.com/api/auth/google', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ accessToken: codeResponse.access_token })
