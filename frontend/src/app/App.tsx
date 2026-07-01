@@ -56,8 +56,8 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
 
     const pingHeartbeat = async () => {
       try {
-        // await fetch(`https://shop.spring.informaticapp.com/api/auth/heartbeat?userId=${encodeURIComponent(user.encryptedId)}&sessionToken=${user.sessionToken}`, {
-        await fetch(`http://localhost:2920/api/auth/heartbeat?userId=${encodeURIComponent(user.encryptedId)}&sessionToken=${user.sessionToken}`, {
+        await fetch(`https://shop.spring.informaticapp.com/api/auth/heartbeat?userId=${encodeURIComponent(user.encryptedId)}&sessionToken=${user.sessionToken}`, {
+          //await fetch(`http://localhost:2920/api/auth/heartbeat?userId=${encodeURIComponent(user.encryptedId)}&sessionToken=${user.sessionToken}`, {
           method: 'POST'
         });
       } catch (error) {
@@ -82,7 +82,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   // Validación de permisos dinámicos (basados en la base de datos)
   if (user.role !== 'ADMIN') {
     const userPerms = user.permisos || [];
-    
+
     const routePermissions: Record<string, string> = {
       '/admin/users': 'GESTIONAR_USUARIOS',
       '/admin/roles': 'GESTIONAR_USUARIOS',
@@ -128,18 +128,18 @@ export default function App() {
 
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
-        <Route path="/admin/users" element={<AdminLayout><Users /></AdminLayout>} />
-        <Route path="/admin/roles" element={<AdminLayout><Roles /></AdminLayout>} />
-        <Route path="/admin/permissions" element={<AdminLayout><Permissions /></AdminLayout>} />
-        <Route path="/admin/tables" element={<AdminLayout><Tables /></AdminLayout>} />
-        <Route path="/admin/dishes" element={<AdminLayout><Dishes /></AdminLayout>} />
-        <Route path="/admin/inventory" element={<AdminLayout><Inventory /></AdminLayout>} />
-        <Route path="/admin/sales" element={<AdminLayout><Sales /></AdminLayout>} />
-        <Route path="/admin/reports" element={<AdminLayout><Reports /></AdminLayout>} />
-        <Route path="/admin/orders" element={<AdminLayout><Orders /></AdminLayout>} />
-        <Route path="/admin/settings" element={<AdminLayout><Settings /></AdminLayout>} />
-      </Routes>
-    </BrowserRouter>
+          <Route path="/admin/users" element={<AdminLayout><Users /></AdminLayout>} />
+          <Route path="/admin/roles" element={<AdminLayout><Roles /></AdminLayout>} />
+          <Route path="/admin/permissions" element={<AdminLayout><Permissions /></AdminLayout>} />
+          <Route path="/admin/tables" element={<AdminLayout><Tables /></AdminLayout>} />
+          <Route path="/admin/dishes" element={<AdminLayout><Dishes /></AdminLayout>} />
+          <Route path="/admin/inventory" element={<AdminLayout><Inventory /></AdminLayout>} />
+          <Route path="/admin/sales" element={<AdminLayout><Sales /></AdminLayout>} />
+          <Route path="/admin/reports" element={<AdminLayout><Reports /></AdminLayout>} />
+          <Route path="/admin/orders" element={<AdminLayout><Orders /></AdminLayout>} />
+          <Route path="/admin/settings" element={<AdminLayout><Settings /></AdminLayout>} />
+        </Routes>
+      </BrowserRouter>
     </GoogleOAuthProvider>
   );
 }

@@ -13,8 +13,8 @@ export default function Register() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // const res = await fetch('https://shop.spring.informaticapp.com/api/auth/register', {
-      const res = await fetch('http://localhost:2920/api/auth/register', {
+      const res = await fetch('https://shop.spring.informaticapp.com/api/auth/register', {
+      // const res = await fetch('http://localhost:2920/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password })
@@ -39,27 +39,27 @@ export default function Register() {
     onSuccess: async codeResponse => {
       console.log('Google Login Success:', codeResponse);
       try {
-        // const res = await fetch('https://shop.spring.informaticapp.com/api/auth/google', {
-        const res = await fetch('http://localhost:2920/api/auth/google', {
+        const res = await fetch('https://shop.spring.informaticapp.com/api/auth/google', {
+          //const res = await fetch('http://localhost:2920/api/auth/google', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ accessToken: codeResponse.access_token })
         });
-        
+
         if (res.ok) {
-           const userData = await res.json();
-           console.log("Usuario autenticado correctamente en BD:", userData);
-           localStorage.setItem('user', JSON.stringify(userData));
-           toast.success("¡Bienvenido " + userData.name + "!");
-           navigate('/admin'); 
+          const userData = await res.json();
+          console.log("Usuario autenticado correctamente en BD:", userData);
+          localStorage.setItem('user', JSON.stringify(userData));
+          toast.success("¡Bienvenido " + userData.name + "!");
+          navigate('/admin');
         } else {
-           const errorText = await res.text();
-           console.error("Error del backend:", errorText);
-           toast.error("Error al iniciar sesión: " + errorText);
+          const errorText = await res.text();
+          console.error("Error del backend:", errorText);
+          toast.error("Error al iniciar sesión: " + errorText);
         }
-      } catch(e) {
-         console.error("Error de conexion al backend", e);
-         toast.error("Error conectando al servidor.");
+      } catch (e) {
+        console.error("Error de conexion al backend", e);
+        toast.error("Error conectando al servidor.");
       }
     },
     onError: error => {
@@ -75,7 +75,7 @@ export default function Register() {
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
         <div className="absolute top-20 right-20 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-        
+
         <div className="relative z-10 flex flex-col justify-center items-center w-full h-full text-white p-12">
           <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-2xl transform hover:scale-105 transition-transform duration-300">
             <span className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-[#D62828] to-[#F77F00]">
@@ -93,8 +93,8 @@ export default function Register() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 overflow-y-auto">
         <div className="w-full max-w-md">
           {/* Back to Home Link */}
-          <Link 
-            to="/login" 
+          <Link
+            to="/login"
             className="inline-flex items-center space-x-2 text-gray-500 hover:text-[#D62828] mb-8 transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />

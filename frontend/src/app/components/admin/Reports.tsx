@@ -39,12 +39,12 @@ export default function Reports() {
   const handleDownload = async () => {
     try {
       setDownloading(true);
-      const baseUrl = 'http://localhost:2920';
-      // const baseUrl = 'https://shop.spring.informaticapp.com';
+      //const baseUrl = 'http://localhost:2920';
+      const baseUrl = 'https://shop.spring.informaticapp.com';
       const response = await fetch(`${baseUrl}/api/admin/reports/audit-logs/download`);
-      
+
       if (!response.ok) throw new Error('Error al descargar');
-      
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -70,7 +70,7 @@ export default function Reports() {
           <h1 className="text-3xl font-bold text-[#111111]">Reportes</h1>
           <p className="text-gray-600">Análisis y estadísticas del negocio</p>
         </div>
-        <button 
+        <button
           onClick={handleDownload}
           disabled={downloading}
           className="bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white px-6 py-3 rounded-lg hover:shadow-lg transition-all flex items-center space-x-2 disabled:opacity-50"

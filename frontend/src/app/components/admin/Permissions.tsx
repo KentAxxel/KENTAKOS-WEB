@@ -24,14 +24,14 @@ export default function Permissions() {
     try {
       setLoading(true);
       setError(null);
-      
-      // const response = await fetch('https://shop.spring.informaticapp.com/api/admin/permissions');
-      const response = await fetch('http://localhost:2920/api/admin/permissions');
-      
+
+      const response = await fetch('https://shop.spring.informaticapp.com/api/admin/permissions');
+      //const response = await fetch('http://localhost:2920/api/admin/permissions');
+
       if (!response.ok) {
         throw new Error('Error al cargar la matriz de permisos');
       }
-      
+
       const result: MatrizPermisosDTO = await response.json();
       setData(result);
     } catch (err) {
@@ -44,8 +44,8 @@ export default function Permissions() {
 
   const handleToggle = async (modulo: string, rol: string, currentValue: boolean) => {
     try {
-      // const response = await fetch('https://shop.spring.informaticapp.com/api/admin/permissions/toggle', {
-      const response = await fetch('http://localhost:2920/api/admin/permissions/toggle', {
+      const response = await fetch('https://shop.spring.informaticapp.com/api/admin/permissions/toggle', {
+        //const response = await fetch('http://localhost:2920/api/admin/permissions/toggle', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ export default function Permissions() {
       <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center max-w-2xl mx-auto mt-12">
         <X className="w-16 h-16 text-red-500 mx-auto mb-4 opacity-50" />
         <p className="text-red-700 font-medium mb-4">{error}</p>
-        <button 
+        <button
           onClick={cargarMatriz}
           className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
         >
@@ -122,9 +122,9 @@ export default function Permissions() {
                     const hasPermission = data.matriz[module] && data.matriz[module][role];
                     return (
                       <td key={`${module}-${role}`} className="px-6 py-4 text-center">
-                        <button 
+                        <button
                           onClick={() => handleToggle(module, role, hasPermission)}
-                          className="mx-auto cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F77F00] rounded-lg transition-transform hover:scale-110 active:scale-95" 
+                          className="mx-auto cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F77F00] rounded-lg transition-transform hover:scale-110 active:scale-95"
                           title="Clic para cambiar el permiso"
                         >
                           {hasPermission ? (
@@ -142,7 +142,7 @@ export default function Permissions() {
                   })}
                 </tr>
               ))}
-              
+
               {data.modulos.length === 0 && (
                 <tr>
                   <td colSpan={data.roles.length + 1} className="px-6 py-8 text-center text-gray-500">

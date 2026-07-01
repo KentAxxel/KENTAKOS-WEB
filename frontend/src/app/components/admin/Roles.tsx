@@ -37,8 +37,8 @@ export default function Roles() {
       setLoading(true);
       setError(null);
 
-      // const response = await fetch('https://shop.spring.informaticapp.com/api/admin/roles');
-      const response = await fetch('http://localhost:2920/api/admin/roles');
+      const response = await fetch('https://shop.spring.informaticapp.com/api/admin/roles');
+      //const response = await fetch('http://localhost:2920/api/admin/roles');
 
 
       if (!response.ok) {
@@ -75,8 +75,8 @@ export default function Roles() {
   // Guardar rol (crear o actualizar)
   const handleGuardarRol = async () => {
     try {
-      const baseUrl = 'http://localhost:2920';
-      // const baseUrl = 'https://shop.spring.informaticapp.com';
+      //const baseUrl = 'http://localhost:2920';
+      const baseUrl = 'https://shop.spring.informaticapp.com';
       const url = editingRol
         ? `${baseUrl}/api/admin/roles/${editingRol.idRol}`
         : `${baseUrl}/api/admin/roles`;
@@ -112,8 +112,8 @@ export default function Roles() {
     }
 
     try {
-      const baseUrl = 'http://localhost:2920';
-      // const baseUrl = 'https://shop.spring.informaticapp.com';
+      //const baseUrl = 'http://localhost:2920';
+      const baseUrl = 'https://shop.spring.informaticapp.com';
       const response = await fetch(`${baseUrl}/api/admin/roles/${id}`, {
         method: 'DELETE'
       });

@@ -19,16 +19,16 @@ export default function Users() {
   }, []);
 
   const fetchUsers = () => {
-    // fetch('https://shop.spring.informaticapp.com/api/usuarios')
-    fetch('http://localhost:2920/api/usuarios')
+    fetch('https://shop.spring.informaticapp.com/api/usuarios')
+      //fetch('http://localhost:2920/api/usuarios')
       .then((res) => res.json())
       .then((data) => setUsers(data))
       .catch((error) => console.error('Error fetching users:', error));
   };
 
   const fetchRoles = () => {
-    // fetch('https://shop.spring.informaticapp.com/api/admin/roles')
-    fetch('http://localhost:2920/api/admin/roles')
+    fetch('https://shop.spring.informaticapp.com/api/admin/roles')
+      // fetch('http://localhost:2920/api/admin/roles')
       .then((res) => res.json())
       .then((data) => setRoles(data))
       .catch((error) => console.error('Error fetching roles:', error));
@@ -37,8 +37,8 @@ export default function Users() {
   const handleDelete = async (encryptedId: string) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
       try {
-        // const response = await fetch(`https://shop.spring.informaticapp.com/api/usuarios/${encryptedId}`, {
-        const response = await fetch(`http://localhost:2920/api/usuarios/${encryptedId}`, {
+        const response = await fetch(`https://shop.spring.informaticapp.com/api/usuarios/${encryptedId}`, {
+          //const response = await fetch(`http://localhost:2920/api/usuarios/${encryptedId}`, {
           method: 'DELETE',
         });
         if (response.ok) {
@@ -66,8 +66,8 @@ export default function Users() {
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // const response = await fetch(`https://shop.spring.informaticapp.com/api/usuarios/${editingUser.encryptedId}`, {
-      const response = await fetch(`http://localhost:2920/api/usuarios/${editingUser.encryptedId}`, {
+      const response = await fetch(`https://shop.spring.informaticapp.com/api/usuarios/${editingUser.encryptedId}`, {
+        //const response = await fetch(`http://localhost:2920/api/usuarios/${editingUser.encryptedId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -101,8 +101,8 @@ export default function Users() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // const response = await fetch('https://shop.spring.informaticapp.com/api/usuarios', {
-      const response = await fetch('http://localhost:2920/api/usuarios', {
+      const response = await fetch('https://shop.spring.informaticapp.com/api/usuarios', {
+        //const response = await fetch('http://localhost:2920/api/usuarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -122,8 +122,8 @@ export default function Users() {
     }
   };
 
-  const filteredUsers = users.filter(u => 
-    u.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+  const filteredUsers = users.filter(u =>
+    u.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     u.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -135,7 +135,7 @@ export default function Users() {
           <h1 className="text-3xl font-bold text-[#111111]">Usuarios</h1>
           <p className="text-gray-600">Gestión de usuarios del sistema</p>
         </div>
-        <button 
+        <button
           onClick={openCreateModal}
           className="bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white px-6 py-3 rounded-lg hover:shadow-lg transition-all flex items-center space-x-2">
           <Plus className="w-5 h-5" />
@@ -202,11 +202,10 @@ export default function Users() {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-3 py-1 text-xs font-semibold rounded-full inline-flex items-center space-x-1 ${
-                      user.status === 'Activo'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-red-100 text-red-700'
-                    }`}>
+                    <span className={`px-3 py-1 text-xs font-semibold rounded-full inline-flex items-center space-x-1 ${user.status === 'Activo'
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-red-100 text-red-700'
+                      }`}>
                       {user.status === 'Activo' ? (
                         <UserCheck className="w-3 h-3" />
                       ) : (
@@ -242,14 +241,14 @@ export default function Users() {
                 <X className="w-6 h-6" />
               </button>
             </div>
-            
+
             <form onSubmit={handleUpdate} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre Completo</label>
                 <input
                   type="text"
                   value={editingUser.name || ''}
-                  onChange={(e) => setEditingUser({...editingUser, name: e.target.value})}
+                  onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D62828] outline-none transition-all"
                   required
                 />
@@ -260,7 +259,7 @@ export default function Users() {
                 <input
                   type="text"
                   value={editingUser.username || ''}
-                  onChange={(e) => setEditingUser({...editingUser, username: e.target.value})}
+                  onChange={(e) => setEditingUser({ ...editingUser, username: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D62828] outline-none transition-all"
                 />
               </div>
@@ -269,7 +268,7 @@ export default function Users() {
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Rol</label>
                 <select
                   value={editingUser.roleId || ''}
-                  onChange={(e) => setEditingUser({...editingUser, roleId: e.target.value})}
+                  onChange={(e) => setEditingUser({ ...editingUser, roleId: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D62828] outline-none transition-all"
                   required
                 >
@@ -288,7 +287,7 @@ export default function Users() {
                     <input
                       type="email"
                       value={editingUser.email || ''}
-                      onChange={(e) => setEditingUser({...editingUser, email: e.target.value})}
+                      onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D62828] outline-none transition-all"
                       required
                     />
@@ -299,7 +298,7 @@ export default function Users() {
                       type="password"
                       placeholder="Dejar en blanco para mantener la actual"
                       value={editingUser.password || ''}
-                      onChange={(e) => setEditingUser({...editingUser, password: e.target.value})}
+                      onChange={(e) => setEditingUser({ ...editingUser, password: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D62828] outline-none transition-all"
                     />
                   </div>
@@ -343,14 +342,14 @@ export default function Users() {
                 <X className="w-6 h-6" />
               </button>
             </div>
-            
+
             <form onSubmit={handleCreate} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre y Apellido</label>
                 <input
                   type="text"
                   value={newUser.username}
-                  onChange={(e) => setNewUser({...newUser, username: e.target.value})}
+                  onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D62828] outline-none transition-all"
                   required
                 />
@@ -361,7 +360,7 @@ export default function Users() {
                 <input
                   type="email"
                   value={newUser.email}
-                  onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                  onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D62828] outline-none transition-all"
                   required
                 />
@@ -372,7 +371,7 @@ export default function Users() {
                 <input
                   type="password"
                   value={newUser.password}
-                  onChange={(e) => setNewUser({...newUser, password: e.target.value})}
+                  onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D62828] outline-none transition-all"
                   required
                 />
