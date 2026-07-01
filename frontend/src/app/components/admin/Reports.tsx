@@ -1,5 +1,6 @@
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Download, TrendingUp, Calendar } from 'lucide-react';
+import { Download, TrendingUp, Calendar, ShieldCheck } from 'lucide-react';
+import { useState } from 'react';
 
 const monthlyData = [
   { month: 'Ene', ventas: 45000, pedidos: 450, clientes: 1200 },
@@ -33,6 +34,34 @@ const hourlyData = [
 ];
 
 export default function Reports() {
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    try {
+      setDownloading(true);
+      const baseUrl = 'http://localhost:2920';
+      // const baseUrl = 'https://shop.spring.informaticapp.com';
+      const response = await fetch(`${baseUrl}/api/admin/reports/audit-logs/download`);
+      
+      if (!response.ok) throw new Error('Error al descargar');
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Reporte_Auditoria_Kentakitos.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Hubo un error al generar el reporte firmado.');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -41,9 +70,13 @@ export default function Reports() {
           <h1 className="text-3xl font-bold text-[#111111]">Reportes</h1>
           <p className="text-gray-600">Análisis y estadísticas del negocio</p>
         </div>
-        <button className="bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white px-6 py-3 rounded-lg hover:shadow-lg transition-all flex items-center space-x-2">
+        <button 
+          onClick={handleDownload}
+          disabled={downloading}
+          className="bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white px-6 py-3 rounded-lg hover:shadow-lg transition-all flex items-center space-x-2 disabled:opacity-50"
+        >
           <Download className="w-5 h-5" />
-          <span>Exportar Reporte</span>
+          <span>{downloading ? 'Firmando y Descargando...' : 'Descargar Reporte Firmado'}</span>
         </button>
       </div>
 

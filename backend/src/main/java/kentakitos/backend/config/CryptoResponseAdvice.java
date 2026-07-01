@@ -18,6 +18,10 @@ public class CryptoResponseAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
+        // No cifrar si se está devolviendo un archivo binario o si es del ReportsController
+        if (returnType.getDeclaringClass().getSimpleName().equals("ReportsController")) {
+            return false;
+        }
         return true;
     }
 
@@ -26,8 +30,8 @@ public class CryptoResponseAdvice implements ResponseBodyAdvice<Object> {
                                   Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   ServerHttpRequest request, ServerHttpResponse response) {
         try {
-            // Evitar cifrar dos veces si ya es un CryptoPayload o si es un error
-            if (body instanceof CryptoPayload) {
+            // Evitar cifrar dos veces si ya es un CryptoPayload o si es un error o archivo
+            if (body instanceof CryptoPayload || body instanceof byte[]) {
                 return body;
             }
             
